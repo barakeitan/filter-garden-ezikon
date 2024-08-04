@@ -1,0 +1,48 @@
+
+
+type FieldDecodingType = "StringFieldDecodingSpec" | "NumberFieldDecodingSpec" | "RawFieldDecodingSpec" | "HexStringFieldDecodingSpec" | "HexNumberFieldDecodingSpec" | "HexRawFieldDecodingSpec"
+
+FieldDecodingSpec {
+    type: FieldDecodingType   Must be one of the strings from the closed list above (FieldDecodingType)
+}
+
+
+type Endianness = "LE" | "BE";  		LE Represents Little Endian, BE Represents Big Endian 
+type NumberType = "int" | "float" | "double"	Numeric representation 
+
+
+NumberFieldDecodingSpec extends FieldDecodingSpec {
+    type: "NumberFieldDecodingSpec"   Type must be NumberFieldDecodingSpec, there is no room for custimization
+    signed: boolean		      Boolean flag that expresses if the number is unsigned or in two's complement form 
+    endianness: Endianness	      The endianess, must be one of values in the closed list in the type Endianess	
+    numberType: NumberType	      The Numeric representation of the data, must be one of the values from the closed list NumberType	
+}
+
+export interface RawFieldDecodingSpec extends FieldDecodingSpec {
+    type: "RawFieldDecodingSpec"   Type must be RawFieldDecodingSpec, there is no room for custimization
+}
+
+StringFieldDecodingSpec extends FieldDecodingSpec {
+    type: "StringFieldDecodingSpec"   Type must be StringFieldDecodingSpec, there is no room for custimization
+    charset: string		      The character enconding of the data, for example, ASCII, UTF-16, etc...
+    escape: string		      The escape char, denoting when to stop reading the data	
+}
+
+The following should used when hexMode is set to true: 
+
+HexStringFieldDecodingSpec extends FieldDecodingSpec {
+    type: 'HexStringFieldDecodingSpec'    	Type must be HexStringFieldDecodingSpec, there is no room for custimization
+    charset: string		      		The character enconding of the data, for example, ASCII, UTF-16, etc...
+    escape: string		      		The escape char, denoting when to stop reading the data	
+}
+
+HexNumberFieldDecodingSpec extends FieldDecodingSpec {
+    type: "HexNumberFieldDecodingSpec"    	Type must be HexNumberFieldDecodingSpec, there is no room for custimization
+    signed: boolean		      		Boolean flag that expresses if the number is unsigned or in two's complement form 
+    endianness: Endianness	      		The endianess, must be one of values in the closed list in the type Endianess	
+    numberType: NumberType	      		The Numeric representation of the data, must be one of the values from the closed list NumberType	
+}
+
+HexRawFieldDecodingSpec extends FieldDecodingSpec {
+    type: "HexRawFieldDecodingSpec"    Type must be HexRawFieldDecodingSpec, there is no room for custimization
+}

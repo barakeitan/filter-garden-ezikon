@@ -1,0 +1,59 @@
+
+
+SpecType = 'ObjectFieldSpec' | 'FieldSpec' | 'SwitchCaseFieldSpec'
+
+AbstractSpec {
+    type: SpecType; 		Must be one of the strings from the closed list above (SpectType)
+    id: string; 		A unique identifier
+    name: string; 		The name of the object 
+}
+
+
+
+This object represents the structure of the object being created like a closed reusable template: 
+
+ObjectSpec {
+    id: string;  			A unique identifier
+    name: string; 			The name of the object
+    children: Array<AbstractSpec>; 	a list of AbstractSpecs either FieldSpecs, ObjectFIeldSpecs, or a SwitchCaseField for the body of the message
+    description?: string; 		A summary of the object
+    type: 'ObjectSpec'   		type must be ObjectSpec, there is no room for custimization
+}
+
+
+This object is used when a field can have one of many configuraions based on a value in a different field, We currently only support referencing the message type field to determine the type of the message recieved, so the map must map specifically to an ObjectFieldSpec:
+
+SwitchCaseFieldSpec extends AbstractSpec {
+    id: string;        				A unique identifier
+    name: string;      				The name of the object
+    type: 'SwitchCaseFieldSpec';     		type must be SwitchCaseFieldSpec, there is no room for custimization
+    pathOfFieldToSwitchOn: string;   	        the path of the field being referenced that holds the value of the desired option within the closed list of case Options
+    caseOptions: Record<string, AbstractSpec>;  A map of possible "options" to the desired configuration based on the option, 
+} 
+
+
+This object represents a set of fields that were created from the ObjectSpec template
+
+ObjectFieldSpec extends AbstractSpec {
+    type: 'ObjectFieldSpec';       Type must be ObjectFieldSpec, there is no room for custimization
+    id: string;                    A unique identifier
+    name: string;                  The name of the object
+    startOffset: OffsetConfig;     the starting point of the object relative to the containing object, Any child field contained in this object will be calculated relative to the offset specified here please Reference the Offset section of the documentation
+    objectSpec: ObjectSpec         the template of the object being created, please reference the ObjectSpec interface above
+}
+
+
+This object represents the shape of a field in the binary message 
+Please reference the documenation about DataExtractionSpec, FieldDecodingSpec, ConstraintSpec, and SemanticsSpec for an in depth explanation
+
+export interface FieldSpec extends AbstractSpec {
+    type: 'FieldSpec';                             Type must be FieldSpec, there is no room for custimization
+    id: string;					   A unique identifier
+    name: string;				   The name of the field
+    hexMode: boolean;				   A boolean value that determines if the field should be presented with hex values in the ui
+    dataExtraction: DataExtractionSpec;		   The configuration that determines how to extract the field from the binary message
+    fieldDecoding: FieldDecodingSpec;		   The configuration that determines how to decode the extracted field
+    constraints: Array<ConstraintSpec>;		   A list of constraints that determine if the decoded field satisfies the expected result in the protocol 
+    semantics?: SemanticsSpec;			   Extra information about the field
+}
+

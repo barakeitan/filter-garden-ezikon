@@ -1,0 +1,53 @@
+
+
+type OffsetConfigType = 
+    "RelativeToMessageStartOffsetConfig" | "RelativeToMessageEndOffsetConfig" | "RelativeToFieldOffsetConfig" |
+    "FieldSizeOffsetConfig" | "CharDelimiterOffsetConfig" | "StoredSizeInAnotherFieldOffsetConfig" | "ArrayOffsetConfig"
+    
+    
+DataExtractionSpec {
+    type: "DataExtractionSpec"   Type must be DataExtractionSpec, there is no room for custimization
+    startOffset: OffsetConfig	 The starting point of which the binary data will be extracted 
+    endOffset: OffsetConfig	 The ending point of which the binary data will be extracted to
+}
+
+
+interface OffsetConfig {
+    type: OffsetConfigType	Must be one of the strings from the closed list above (OffsetConfigType)
+}
+
+interface ArrayOffsetConfig extends OffsetConfig {
+    type: "ArrayOffsetConfig"    Type must be DataExtractionSpec, there is no room for custimization
+    arraySizeFieldPath: string   The path to the field that holds the value of the size of the array
+    itemSize: number		 The amount of bytes of each element in the array 
+}
+
+interface RelativeToMessageStartOffsetConfig extends OffsetConfig {
+    type: "RelativeToMessageStartOffsetConfig"     Type must be DataExtractionSpec, there is no room for custimization
+    value: number				   The value of where to start extracting the field looking at the message from left to right (this value is relative to the containing obejct)
+}
+
+interface RelativeToMessageEndOffsetConfig extends OffsetConfig {
+    type: "RelativeToMessageEndOffsetConfig"      Type must be DataExtractionSpec, there is no room for custimization
+    value: number                                 The value of where to start extracting the field looking at the message from right to left (this value is relative to the containing obejct)
+}
+
+interface RelativeToFieldOffsetConfig extends OffsetConfig {
+    type: "RelativeToFieldOffsetConfig"        Type must be DataExtractionSpec, there is no room for custimization
+    fieldPath: string			       The path of the field that comes right before the desired field being configured currently 
+}
+
+interface FieldSizeOffsetConfig extends OffsetConfig {
+    type: "FieldSizeOffsetConfig"               Type must be DataExtractionSpec, there is no room for custimization
+    size: number				The size in bytes of the field 
+}
+
+interface CharDelimiterOffsetConfig extends OffsetConfig {
+    type: "CharDelimiterOffsetConfig"            Type must be DataExtractionSpec, there is no room for custimization
+    delimiter: string				 The delimiter character to stop reading bytes once hit
+}
+
+interface StoredSizeInAnotherFieldOffsetConfig extends OffsetConfig {
+    type: "StoredSizeInAnotherFieldOffsetConfig"       Type must be DataExtractionSpec, there is no room for custimization
+    fieldPath: string				       The path to the field that holds the value that represents the size of the field being configured
+}

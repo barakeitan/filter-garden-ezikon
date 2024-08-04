@@ -1,0 +1,76 @@
+
+
+type ConstraintSpecType = 
+	"NumericRangeConstraintSpec" | "StringSizeConstraintSpec" | "StringCharRulesConstraintSpec" | 
+	"StringRegexConstraintSpec" | "HexNumericRangeConstraintSpec" | "HexStringSizeConstraintSpec" | "HexStringCharRulesConstraintSpec"
+
+ConstraintSpec {
+    type: ConstraintSpecType    Must be one of the strings from the closed list above (ConstraintSpecType)
+    name: string                The name of the constraint
+    id: string			A unique identifier
+}
+
+
+The following constraints are to be used when the configured fields decoding is NumberFieldDecoding:
+
+NumberMinMaxRange {
+    type: "NumberMinMaxRange";    Type must be NumberMinMaxRange, there is no room for custimization
+    min: number;		  The minimum numeric value the field is allowed to be before raising a constraint error
+    max: number;		  The maximum numeric value the field is allowed to be before raising a constraint error
+}
+
+NumericRangeConstraintSpec extends ConstraintSpec {
+    type: "NumericRangeConstraintSpec"  Type must be NumericRangeConstraintSpec, there is no room for custimization
+    ranges: NumberMinMaxRange[];        A list of NumberMinMaxRange objects specified above, if more than 1 constraint is present than a logical OR is perfomed between all constraints to validate the field
+}
+
+
+
+The following constraints are to be used when the configured fields decoding is StringFieldDecoding:
+
+StringSizeConstraintSpec extends ConstraintSpec {
+    type: "StringSizeConstraintSpec"    Type must be StringSizeConstraintSpec, there is no room for custimization
+    min: number   			The minimum length the field is allowed to have before raising a constraint error
+    max: number   			The maximum length the field is allowed to have before raising a constraint error
+}
+
+StringCharRulesConstraintSpec extends ConstraintSpec {
+    type: "StringCharRulesConstraintSpec"    Type must be StringCharRulesConstraintSpec, there is no room for custimization
+    abc: string[]			     A closed set representing the allowed groups the characters can be part of.
+    whiteList: string[]			     A list of characters that are allowed to be present in the decoded string
+    blackList: string[]			     A list of characters that if found in the decoded field will raise a constraint error	
+}
+
+StringRegexConstraintSpec extends ConstraintSpec {
+    type: "StringRegexConstraintSpec"       Type must be StringRegexConstraintSpec, there is no room for custimization
+    patternType: "blocked" | "allowed";	    a closed list that specifies whether the specified regex raieses a constraint error if matched or doesnt match.
+    regexPattern: string                    The regex that will be matched to the decoded string
+}
+
+
+
+The following constraints are to be used if hexMode is set to true
+
+HexMinMaxRange {
+    type: "HexMinMaxRange";                          Type must be HexMinMaxRange, there is no room for custimization
+    min: string;		  		     The minimum numeric value the field is allowed to be before raising a constraint error, the value is written in hex
+    max: string;		                     The maximum numeric value the field is allowed to be before raising a constraint error, the value is written in hex
+}
+
+HexStringSizeConstraintSpec extends ConstraintSpec {
+    type: "HexStringSizeConstraintSpec"                 Type must be HexStringSizeConstraintSpec, there is no room for custimization
+    min: string   					The minimum length the field is allowed to have before raising a constraint error, the value is written in hex
+    max: string   					The maximum length the field is allowed to have before raising a constraint error, the value is written in hex
+}
+
+HexNumericRangeConstraintSpec extends ConstraintSpec {
+    type: "HexNumericRangeConstraintSpec"    Type must be HexNumericRangeConstraintSpec, there is no room for custimization
+    ranges: HexMinMaxRange[];    A list of HexNumericRangeConstraintSpec objects specified above, if more than 1 constraint is present than a logical OR is perfomed between all constraints to validate the field
+}
+
+HexStringCharRulesConstraintSpec extends ConstraintSpec {
+    type: "HexStringCharRulesConstraintSpec"            Type must be HexStringCharRulesConstraintSpec, there is no room for custimization
+    abc: string[]			     		A closed set representing the allowed groups the characters can be part of.
+    whiteList: string[]			     		A list of characters that are allowed to be present in the decoded string
+    blackList: string[]			     		A list of characters that if found in the decoded field will raise a constraint error	
+}

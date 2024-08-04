@@ -1,0 +1,503 @@
+{
+    "id": "a6c24864-e399-4ec9-8d85-0034215b04d2",
+    "name": "Simplest",
+    "description": "",
+    "creator": "Proto01_3 proto01_1",
+    "lastModifiedTimestamp": 1720529750497,
+    "createdTimestamp": 1720088005639,
+    "hexMode": false,
+    "messageSpec": {
+        "spec": {
+            "id": "836bf367-41ad-499a-9417-cd5e6973d969",
+            "name": "messageSpec",
+            "type": "ObjectSpec",
+            "children": [
+                {
+                    "name": "header",
+                    "type": "ObjectFieldSpec",
+                    "objectSpec": {
+                        "id": "362254fa-5d5b-400a-9fc9-a8ad388ea00c",
+                        "name": "Header",
+                        "type": "ObjectSpec",
+                        "children": [
+                            {
+                                "name": "version",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "none"
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "89ec355d-27aa-4c48-a078-57245b10feb5",
+                                        "name": "version valid values constraint",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 5,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToMessageStartOffsetConfig",
+                                        "value": 0
+                                    }
+                                }
+                            },
+                            {
+                                "name": "msg_type",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "MessageTypeSemanticsSpec",
+                                    "options": [
+                                        {
+                                            "key": "1",
+                                            "type": "MessageTypeOption",
+                                            "label": "hello_msg"
+                                        },
+                                        {
+                                            "key": "2",
+                                            "type": "MessageTypeOption",
+                                            "label": "bye_msg"
+                                        }
+                                    ]
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                    "type": "RawFieldDecodingSpec"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToMessageStartOffsetConfig",
+                                        "value": 1
+                                    }
+                                }
+                            },
+                            {
+                                "name": "family",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "none"
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "5fe3affa-6b6b-41d2-a2be-4ee42c236b4e",
+                                        "name": "family value constraint",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 6,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./msg_type"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "len",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "MessageLengthSemanticsSpec",
+                                    "diffFromMessageSize": 6
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "c0d32e2f-2271-411f-a48d-5d81c2c60711",
+                                        "name": "new constraint",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 2147483647,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 2,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./family"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "padding",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "NumberConstant",
+                                    "value": 0
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./len"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 0
+                    }
+                },
+                {
+                    "name": "body",
+                    "type": "SwitchCaseFieldSpec",
+                    "caseOptions": {
+                        "1": {
+                            "name": "hello_msg",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "6873f822-eb68-48d9-8e3c-6906c12c5426",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": [
+                                    {
+                                        "name": "bienvenue",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "47d4f3fc-1417-4e70-b8fc-7f9c5a03d726",
+                                                "name": "bienvenue value constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 18047,
+                                                        "min": 2,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 2,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToMessageStartOffsetConfig",
+                                                "value": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "welcome",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "8a20e9bd-f3cc-4e5b-9761-b3b74704122d",
+                                                "name": "welcome value constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 9,
+                                                        "min": 4,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "float"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 4,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./bienvenue"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "padding",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "NumberConstant",
+                                            "value": 0
+                                        },
+                                        "constraints": [],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 8,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./welcome"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "ok",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "3e58b79a-ce7d-4d05-a83c-731ae901a08d",
+                                                "name": "ok value constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 2147483647,
+                                                        "min": 0,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 1,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./padding"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "startOffset": {
+                                "type": "RelativeToFieldOffsetConfig",
+                                "fieldPath": "./header"
+                            }
+                        },
+                        "2": {
+                            "name": "bye_msg",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "3ed30812-55e3-4f7f-b750-bf494f0f988d",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": [
+                                    {
+                                        "name": "how_are_u",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [],
+                                        "fieldDecoding": {
+                                            "type": "RawFieldDecodingSpec"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 1,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToMessageStartOffsetConfig",
+                                                "value": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "goodbye",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "2a601b68-5778-4ed3-b045-1f1ed810386e",
+                                                "name": "goodbye value constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 3,
+                                                        "min": 2,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 1,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./how_are_u"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "padding",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [],
+                                        "fieldDecoding": {
+                                            "type": "RawFieldDecodingSpec"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 8,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./goodbye"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "have_a_nice_day",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [],
+                                        "fieldDecoding": {
+                                            "type": "RawFieldDecodingSpec"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 1,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./padding"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "startOffset": {
+                                "type": "RelativeToFieldOffsetConfig",
+                                "fieldPath": "./header"
+                            }
+                        }
+                    },
+                    "pathOfFieldToSwitchOn": "/header/msg_type"
+                }
+            ]
+        },
+        "version": "1.0"
+    }
+}
