@@ -1,0 +1,80 @@
+
+
+type SemanticsConfigType =
+    "none" | "TimeSemanticsSpec" | "ChangingMonotonicitySemanticsSpec" | "MessageLengthSemanticsSpec" |
+    "StringConstant" | "NumberConstant" | "HexConstant" | "ChecksumSemanticsSpec" | "MessageTypeSemanticsSpec" | 
+    "EnumSemanticsSpec" | "message-destination" | "message-source" | "gap"
+
+
+SemanticsSpec {
+    type: SemanticsConfigType   Must be one of the strings from the closed list above (SemanticsConfigType)
+}
+
+SemanticsOptions {
+    type: string;   the type of the Semantics option either MessageTypeOption or EnumOption
+    key: string;    the value of the item
+    label: string;  the descriptive label of the value
+}
+
+MessageTypeOption extends SemanticsOptions {
+    type: "MessageTypeOption";   Type must be MessageTypeOption, there is no room for custimization
+}
+
+EnumOption extends SemanticsOptions {
+    type: "EnumOption";    Type must be EnumOption, there is no room for custimization
+}
+
+MessageTypeSemanticsSpec extends SemanticsSpec {
+    type: "MessageTypeSemanticsSpec"      Type must be MessageTypeSemanticsSpec, there is no room for custimization
+    options: MessageTypeOption[]  a list of MessageTypeOption objects that specifies the possible different type of message types there are in the messages
+}
+
+EnumSemanticsSpec extends SemanticsSpec {
+    type: "EnumSemanticsSpec"       Type must be EnumSemanticsSpec, there is no room for custimization
+    options: EnumOption[]   a list of EnumOption objects that soecifiy the possible different values of a specific field, (this is similar to message type but is more general), this semantics as a constraint and will raise an error if the field recieves a value other than what was specified in the closed list specified.
+}
+
+GapSemanticsSpec extends SemanticsSpec {
+    type: "gap",             Type must be gap, there is no room for custimization
+    description: string;     a description of the "gap" between fields, we will use this when there is a "hole" between 2 fields where a certain amount of offsets are unoccupied 
+}
+
+StringConstantSemanticsSpec extends SemanticsSpec {
+    type: 'StringConstant';          Type must be StringConstant, there is no room for custimization
+    value: string;        the constant value of the field, this semantics acts as a constraint and will raise an error if the field revieves a value other than what is specified here.
+}
+
+NumberConstantSemanticsSpec extends SemanticsSpec {
+    type: 'NumberConstant';      Type must be NumberConstant, there is no room for custimization
+    value: number;       the constant value of the field, this semantics acts as a constraint and will raise an error if the field revieves a value other than what is specified here.
+}
+
+HexConstantSemanticsSpec extends SemanticsSpec {
+    type: 'HexConstant';  Type must be HexConstant, there is no room for custimization
+    value: string;      the constant value of the field, this semantics acts as a constraint and will raise an error if the field revieves a value other than what is specified here. the value is specified as hex
+}
+
+TimeSemanticsSpec extends SemanticsSpec {
+    type: "TimeSemanticsSpec"   Type must be TimeSemanticsSpec, there is no room for custimization
+    resolution: string     the resolution of the timestamp to be looked at
+}
+
+MessageLengthSemanticsSpec extends SemanticsSpec {
+    type: "MessageLengthSemanticsSpec"
+    diffFromMessageSize: number
+}
+
+ChecksumSemanticsSpec extends SemanticsSpec {
+    type:"ChecksumSemanticsSpec";   Type must be ChecksumSemanticsSpec, there is no room for custimization
+    endianness: Endianness;         The endianess of the field, please reference the NumberField decoding part of the documentation
+    algorithm: string;		    The algorithm used to calculate the checksum
+    dstFieldStartOffset: number;    The offset of which to start the calculation of the checksum
+    dstFieldEndOffset: number;      The offset of which to calculate up to
+}
+
+type MonotonicityType = "increasing" | "non-decreasing" | "decreasing" | "non-increasing"
+
+ChangingMonotonicitySemanticsSpec extends SemanticsSpec {
+    type: "ChangingMonotonicitySemanticsSpec"    Type must be ChecksumSemanticsSpec, there is no room for custimization
+    monotonicityType: MonotonicityType           must be one of the values specified in the closed list MonotonicityType above
+}

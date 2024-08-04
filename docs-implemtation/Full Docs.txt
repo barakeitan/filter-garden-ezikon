@@ -1,0 +1,432 @@
+AbstractSpec --- This abstract type represents a generic structure shared by several specific specifications.
+
+type: A string indicating the type of specification. It must be one of the following: 'ObjectFieldSpec', 'FieldSpec', or 'SwitchCaseFieldSpec'.
+id: A unique identifier for the specification.
+name: The name associated with the specification.
+
+
+ObjectSpec --- This object represents a reusable template for creating structured objects.
+
+id: A unique identifier for the object.
+name: The name of the object.
+children: An array of AbstractSpec instances, which could be FieldSpec, ObjectFieldSpec, or SwitchCaseFieldSpec.
+description (optional): A summary description of the object.
+type: This must be 'ObjectSpec', indicating the type of specification.
+
+
+SwitchCaseFieldSpec --- This object is used when a field's configuration depends on a value in another field. We currently only support referencing the message type field to determine the type of the message recieved, so the map must map specifically to an ObjectFieldSpec
+
+id: A unique identifier for the field.
+name: The name of the field.
+type: Must be 'SwitchCaseFieldSpec'.
+pathOfFieldToSwitchOn: The path of the field holding the value determining the configuration.
+caseOptions: A mapping of options to configurations based on the value of the referenced field.
+
+
+ObjectFieldSpec --- This object represents a set of fields created from an ObjectSpec template.
+
+type: Must be 'ObjectFieldSpec'.
+id: A unique identifier for the field.
+name: The name of the field.
+startOffset: Specifies the starting point of the object relative to its containing object. Any child field contained in this object will be calculated relative to the offset specified here please Reference the Offset section of the documentation
+objectSpec: An ObjectSpec instance representing the template for the object being created.
+
+
+FieldSpec --- This interface defines the shape of a field in a binary message.
+Please reference the documenation about DataExtractionSpec, FieldDecodingSpec, ConstraintSpec, and SemanticsSpec for an in depth explanation
+
+type: Must be 'FieldSpec'.
+id: A unique identifier for the field.
+name: The name of the field.
+hexMode: A boolean value indicating whether the field should be displayed with hexadecimal values.
+dataExtraction: Configuration for extracting the field from the binary message.
+fieldDecoding: Configuration for decoding the extracted field.
+constraints: An array of constraints determining if the decoded field meets protocol expectations.
+semantics (optional): Additional information about the field.
+
+
+
+
+
+
+FieldDecodingSpec
+This is an abstract type representing the general structure of a field decoding specification.
+
+type: A string indicating the type of field decoding specification. It must be one of the following: "StringFieldDecodingSpec", "NumberFieldDecodingSpec", "RawFieldDecodingSpec", "HexStringFieldDecodingSpec", "HexNumberFieldDecodingSpec", or "HexRawFieldDecodingSpec".
+
+
+
+NumberFieldDecodingSpec
+This specification is used for decoding numeric fields.
+
+type: Must be "NumberFieldDecodingSpec".
+signed: A boolean flag indicating if the number is signed.
+endianness: The endianness of the number, either "LE" (Little Endian) or "BE" (Big Endian).
+numberType: The numeric representation of the data, which must be one of: "int", "float", or "double".
+
+
+
+RawFieldDecodingSpec
+This specification is used for decoding raw fields.
+
+type: Must be "RawFieldDecodingSpec".
+
+
+
+StringFieldDecodingSpec
+This specification is used for decoding string fields.
+
+type: Must be "StringFieldDecodingSpec".
+charset: The character encoding of the data (e.g., ASCII, UTF-16, etc.).
+escape: The escape character denoting when to stop reading the data.
+
+
+
+HexStringFieldDecodingSpec
+This specification is used for decoding hexadecimal string fields. It is used when hexMode is set to true.
+
+type: Must be "HexStringFieldDecodingSpec".
+charset: The character encoding of the data (e.g., ASCII, UTF-16, etc.).
+escape: The escape character denoting when to stop reading the data.
+
+
+
+HexNumberFieldDecodingSpec
+This specification is used for decoding hexadecimal numeric fields. It is used when hexMode is set to true.
+
+type: Must be "HexNumberFieldDecodingSpec".
+signed: A boolean flag indicating if the number is signed.
+endianness: The endianness of the number, either "LE" (Little Endian) or "BE" (Big Endian).
+numberType: The numeric representation of the data, which must be one of: "int", "float", or "double".
+
+
+
+HexRawFieldDecodingSpec
+This specification is used for decoding hexadecimal raw fields. It is used when hexMode is set to true.
+
+type: Must be "HexRawFieldDecodingSpec".
+
+
+
+
+
+
+
+
+
+DataExtractionSpec
+This specification defines how binary data is extracted.
+
+type: Must be "DataExtractionSpec".
+startOffset: The starting point from which binary data will be extracted.
+endOffset: The ending point up to which binary data will be extracted.
+
+
+
+OffsetConfig
+This interface represents various types of offset configurations for data extraction.
+
+type: A string indicating the type of offset configuration. It must be one of the following: "RelativeToMessageStartOffsetConfig", "RelativeToMessageEndOffsetConfig", "RelativeToFieldOffsetConfig", "FieldSizeOffsetConfig", "CharDelimiterOffsetConfig", or "StoredSizeInAnotherFieldOffsetConfig".
+
+
+
+ArrayOffsetConfig
+This configuration specifies offset for extracting data from an array.
+
+type: Must be "ArrayOffsetConfig".
+arraySizeFieldPath: The path to the field holding the size of the array.
+itemSize: The size in bytes of each element in the array.
+
+
+
+
+RelativeToMessageStartOffsetConfig
+This configuration specifies an offset relative to the start of the message.
+
+type: Must be "RelativeToMessageStartOffsetConfig".
+value: The value indicating where to start extracting data, relative to the start of the message.
+
+
+
+
+RelativeToMessageEndOffsetConfig
+This configuration specifies an offset relative to the end of the message.
+
+type: Must be "RelativeToMessageEndOffsetConfig".
+value: The value indicating where to start extracting data, relative to the end of the message.
+
+
+
+
+RelativeToFieldOffsetConfig
+This configuration specifies an offset relative to another field.
+
+type: Must be "RelativeToFieldOffsetConfig".
+fieldPath: The path to the field that comes before the desired field being configured.
+
+
+
+
+FieldSizeOffsetConfig
+This configuration specifies the size of the field.
+
+type: Must be "FieldSizeOffsetConfig".
+size: The size in bytes of the field.
+
+
+
+
+CharDelimiterOffsetConfig
+This configuration specifies offset based on a character delimiter.
+
+type: Must be "CharDelimiterOffsetConfig".
+delimiter: The delimiter character used to stop reading bytes.
+
+
+
+
+StoredSizeInAnotherFieldOffsetConfig
+This configuration specifies offset based on the size stored in another field.
+
+type: Must be "StoredSizeInAnotherFieldOffsetConfig".
+fieldPath: The path to the field holding the size value for the field being configured.
+
+
+
+
+
+
+
+
+
+
+
+SemanticsSpec
+This is an abstract type representing the general structure of semantics configurations.
+
+type: A string indicating the type of semantics configuration. It must be one of the following: "none", "TimeSemanticsSpec", "ChangingMonotonicitySemanticsSpec", "MessageLengthSemanticsSpec", "StringConstant", "NumberConstant", "HexConstant", "ChecksumSemanticsSpec", "MessageTypeSemanticsSpec", "EnumSemanticsSpec", "message-destination", or "gap".
+
+
+SemanticsOptions
+This interface represents options for semantics specifications.
+
+type: The type of semantics option, either "MessageTypeOption" or "EnumOption".
+key: The value of the item.
+label: The descriptive label of the value.
+
+
+
+MessageTypeOption
+This option specifies message type semantics.
+
+type: Must be "MessageTypeOption".
+key: The value of the message type.
+label: The descriptive label of the message type.
+
+
+
+EnumOption
+This option specifies enum semantics.
+
+type: Must be "EnumOption".
+key: The value of the enum.
+label: The descriptive label of the enum.
+
+
+
+MessageTypeSemanticsSpec
+This specification is used for message type semantics.
+
+type: Must be "MessageTypeSemanticsSpec".
+options: A list of MessageTypeOption objects specifying possible message types.
+
+
+
+EnumSemanticsSpec
+This specification is used for enum semantics. (this is similar to message type but is more general) 
+this semantics acts as a constraint and will raise an error if the field is a value other than what is specified here.
+
+type: Must be "EnumSemanticsSpec".
+options: A list of EnumOption objects specifying possible enum values.
+
+
+
+
+GapSemanticsSpec
+This specification is used to describe a gap between fields.
+we will use this when there is a "hole" between 2 fields where a certain amount of offsets are unoccupied 
+
+type: Must be "gap".
+description: A description of the gap between fields.
+
+
+StringConstantSemanticsSpec
+This specification is used for string constant semantics.
+
+type: Must be "StringConstant".
+value: The constant value of the field.
+
+
+
+
+NumberConstantSemanticsSpec
+This specification is used for number constant semantics. this semantics acts as a constraint and will raise an error if the field revieves a value other than what is specified here.
+
+type: Must be "NumberConstant".
+value: The constant value of the field.
+
+
+
+
+HexConstantSemanticsSpec
+This specification is used for hexadecimal constant semantics. this semantics acts as a constraint and will raise an error if the field revieves a value other than what is specified here.
+
+type: Must be "HexConstant".
+value: The constant value of the field in hexadecimal format.
+
+
+
+
+TimeSemanticsSpec
+This specification is used for time semantics.
+
+type: Must be "TimeSemanticsSpec".
+resolution: The resolution of the timestamp.
+
+
+
+
+MessageLengthSemanticsSpec
+This specification is used for message length semantics.
+
+type: Must be "MessageLengthSemanticsSpec".
+diffFromMessageSize: The difference from the message size.
+
+
+
+
+ChecksumSemanticsSpec
+This specification is used for checksum semantics.
+
+type: Must be "ChecksumSemanticsSpec".
+endianness: The endianness of the field.
+algorithm: The algorithm used to calculate the checksum.
+dstFieldStartOffset: The start offset for checksum calculation.
+dstFieldEndOffset: The end offset for checksum calculation.
+
+
+
+
+ChangingMonotonicitySemanticsSpec
+This specification is used for changing monotonicity semantics.
+
+type: Must be "ChangingMonotonicitySemanticsSpec".
+monotonicityType: The type of monotonicity, which must be one of: "increasing", "non-decreasing", "decreasing", or "non-increasing".
+
+
+
+
+
+
+
+
+ConstraintSpec
+This is an abstract type representing the general structure of constraint specifications.
+
+type: A string indicating the type of constraint specification. It must be one of the following: "NumericRangeConstraintSpec", "StringSizeConstraintSpec", "StringCharRulesConstraintSpec", "StringRegexConstraintSpec", "HexNumericRangeConstraintSpec", "HexStringSizeConstraintSpec", or "HexStringCharRulesConstraintSpec".
+name: The name of the constraint.
+id: A unique identifier for the constraint.
+
+
+
+
+NumberMinMaxRange
+This specifies the minimum and maximum range of numeric values.
+
+type: Must be "NumberMinMaxRange".
+min: The minimum numeric value allowed for the field.
+max: The maximum numeric value allowed for the field.
+
+
+
+
+NumericRangeConstraintSpec
+This specification is used for numeric range constraints.
+
+type: Must be "NumericRangeConstraintSpec".
+ranges: An array of NumberMinMaxRange objects specifying the allowed numeric ranges.
+
+
+
+
+StringSizeConstraintSpec
+This specification is used for string size constraints.
+
+type: Must be "StringSizeConstraintSpec".
+min: The minimum length allowed for the field.
+max: The maximum length allowed for the field.
+
+
+
+
+StringCharRulesConstraintSpec
+This specification is used for string character rules constraints.
+
+type: Must be "StringCharRulesConstraintSpec".
+abc: A closed set representing the allowed groups the characters can be part of.
+whiteList: A list of characters allowed to be present in the decoded string.
+blackList: A list of characters that, if found in the decoded field, will raise a constraint error.
+
+
+
+
+StringRegexConstraintSpec
+This specification is used for string regex constraints.
+
+type: Must be "StringRegexConstraintSpec".
+patternType: A closed list specifying whether the specified regex raises a constraint error if matched or not.
+regexPattern: The regex pattern to be matched against the decoded string.
+
+
+
+
+HexMinMaxRange
+This specifies the minimum and maximum range of hexadecimal values.
+
+type: Must be "HexMinMaxRange".
+min: The minimum hexadecimal value allowed for the field.
+max: The maximum hexadecimal value allowed for the field.
+
+
+
+
+HexStringSizeConstraintSpec
+This specification is used for hexadecimal string size constraints.
+
+type: Must be "HexStringSizeConstraintSpec".
+min: The minimum length allowed for the field in hexadecimal format.
+max: The maximum length allowed for the field in hexadecimal format.
+
+
+
+HexNumericRangeConstraintSpec
+This specification is used for hexadecimal numeric range constraints.
+
+type: Must be "HexNumericRangeConstraintSpec".
+ranges: An array of HexMinMaxRange objects specifying the allowed hexadecimal ranges.
+
+
+
+
+HexStringCharRulesConstraintSpec
+This specification is used for hexadecimal string character rules constraints.
+
+type: Must be "HexStringCharRulesConstraintSpec".
+abc: A closed set representing the allowed groups the characters can be part of.
+whiteList: A list of characters allowed to be present in the decoded string.
+blackList: A list of characters that, if found in the decoded field, will raise a constraint error.
+
+
+
+
+
