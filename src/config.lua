@@ -8,7 +8,7 @@
 
 local config = {
     inputPath = "./data/Message-Spec-Example.json",
-    outputPath = "./output/simplest.lua"
+    outputPath = "./output/Message-Spec-Example.lua"
 }
 
 return config
