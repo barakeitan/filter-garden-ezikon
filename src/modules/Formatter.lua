@@ -15,6 +15,12 @@ function Formatter.serializeValue(v)
         return s .. "}"
     elseif type(v) == "string" then
         return '"' .. v .. '"'
+    elseif type(v) == "boolean" then
+        if v then
+            v = "true"
+        else
+            v = "false"
+        end
     else
         return tostring(v)
     end

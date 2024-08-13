@@ -12,7 +12,7 @@ local config = require("config")
 function Create_filter(inputPath, outputPath)
     local luaTable = JsonParser.jsonFileToTable(inputPath)
     JsonFieldExtractor.load_json_icd(luaTable)
-    local json_icd = JsonFieldExtractor.get_json_icd()
+    local json_icd = JsonFieldExtractor.get_json_icd(luaTable)
 
     -- Format tables and write to file
     local formattedTables = Formatter.formatTables(json_icd)

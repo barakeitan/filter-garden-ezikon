@@ -1,5 +1,5 @@
 --header
-header_record = {
+local header_record = {
   { name = "version", data_type = "uint8_t", valid_value = {min = 0, max = 5} },
   { name = "type", data_type = "uint8_t", type_id = true, valid_value = {enum = {1, 2}} },
   { name = "family", data_type = "uint8_t", valid_value = {enum = {0, 1, 2, 3, 4, 5, 6}} },
@@ -27,7 +27,9 @@ local bye_msg = {
 }
 
 --messages table
-messages = {
+local messages = {
   [1] = hello_msg,
   [2] = bye_msg
 }
+
+generate_filter_code(header_record, messages)
