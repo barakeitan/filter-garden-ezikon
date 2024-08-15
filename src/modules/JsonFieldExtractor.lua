@@ -101,7 +101,7 @@ end
 
 -- Function to generate Lua code for header record
 local function generate_header_code()
-    return "--header\nlocal header_record = " .. JsonFieldExtractor.table_to_string(json_icd.header_record) .. "\n\n"
+    return "--header\nlocal header_record = " .. JsonFieldExtractor.table_to_string(json_icd.header_record, 0) .. "\n\n"
 end
 
 -- Function to generate Lua code for individual message definitions
@@ -112,7 +112,7 @@ local function generate_messages_code()
         for index, field in ipairs(message.fields) do
             output = output .. "    { name = \"" .. field.name .. "\", data_type = \"" .. field.data_type .. "\""
             if field.valid_value then
-                output = output .. ", valid_value = " .. JsonFieldExtractor.table_to_string(field.valid_value)
+                output = output .. ", valid_value = " .. JsonFieldExtractor.table_to_string(field.valid_value, 0)
             end
             output = output .. " },\n"
         end
@@ -148,30 +148,43 @@ function JsonFieldExtractor.get_json_icd(json_table)
     return json_icd, lua_output
 end
 
--- Helper function to convert a Lua table to a string
-function JsonFieldExtractor.table_to_string(tbl)
-    local result = "{"
-    for k, v in pairs(tbl) do
-        if type(k) == "string" then
-            k = "\"" .. k .. "\""
-        end
-        if type(v) == "table" then
-            v = JsonFieldExtractor.table_to_string(v)
-        else
-            if type(v) == "string" then
-                v = "\"" .. v .. "\""
-            end
-        end
-        if type(v) == "boolean" then
-            if v then
-                v = "true"
+-- Helper function to convert a Lua table to a string with proper formatting
+function JsonFieldExtractor.table_to_string(tbl, indent)
+    indent = indent or 0
+    local result = "{\n"
+    local padding = string.rep("  ", indent + 1)
+
+    for _, v in ipairs(tbl) do
+        result = result .. padding .. "{ "
+        for key, value in pairs(v) do
+            if key == "valid_value" and type(value) == "table" then
+                result = result .. key .. " = { "
+                if value.enum then
+                    result = result .. "enum = { " .. table.concat(value.enum, ", ") .. " }"
+                else
+                    local min = value.min or ""
+                    local max = value.max or ""
+                    result = result .. "min = " .. min .. ", max = " .. max
+                end
+                result = result .. " }, "
+            elseif type(value) == "table" then
+                result = result .. key .. " = " .. JsonFieldExtractor.table_to_string({value}, indent + 1) .. ", "
             else
-                v = "false"
+                if type(value) == "string" then
+                    value = "\"" .. value .. "\""
+                end
+                result = result .. key .. " = " .. tostring(value) .. ", "
             end
         end
-        result = result .. "[" .. k .. "]=" .. v .. ","
+        result = result:sub(1, -3) -- Remove the trailing comma and space
+        result = result .. " },\n"
     end
-    return result .. "}"
+
+    result = result .. string.rep("  ", indent) .. "}"
+    return result
 end
+    
+    
+    
 
 return JsonFieldExtractor
