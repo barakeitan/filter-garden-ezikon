@@ -15,8 +15,8 @@ function Create_filter(inputPath, outputPath)
     local json_icd = JsonFieldExtractor.get_json_icd(luaTable)
 
     -- Format tables and write to file
-    local formattedTables = Formatter.formatTables(json_icd)
-    FileOperations.writeFile(outputPath, formattedTables)
+    --local formattedTables = Formatter.formatTables(json_icd)
+    FileOperations.writeFile(outputPath, json_icd)
 
     print("Conversion complete. Output written to " .. outputPath)
 end

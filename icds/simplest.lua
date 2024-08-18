@@ -14,7 +14,16 @@ local hello_msg = {
     { name = "welcome", data_type="float", valid_value = {min = 4, max = 9} },
     { name = "padd", data_type="padding", bit_count = 68 },
     { name = "ok", data_type="uint8_t" }
+    
   }
+}
+
+-- st
+local st = {
+  { name = "bienvenue", data_type="uint16_t", valid_value = {min = 2, max = 18047} },
+  { name = "welcome", data_type="float", valid_value = {min = 4, max = 9} },
+  { name = "padd", data_type="padding", bit_count = 68 },
+  { name = "ok", data_type="uint8_t" }
 }
 
 local bye_msg = {
@@ -30,6 +39,10 @@ local bye_msg = {
 local messages = {
   [1] = hello_msg,
   [2] = bye_msg
+}
+
+local structs = {
+  ["st_t"] = st
 }
 
 generate_filter_code(header_record, messages)
