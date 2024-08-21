@@ -3,7 +3,7 @@
 local ArgumentParser = {}
 
 -- Function to print the help message
-local function printHelp()
+local function print_help()
     print([[
 Usage: ./exe <inputPath> <outputPath>
 
@@ -21,7 +21,7 @@ function ArgumentParser.parse_arguments(...)
     local args = {...}
     if #args >= 2 then
         if arg[1] == "--help" or arg[2] == "--help" then
-            printHelp()
+            print_help()
             os.exit(0)
         end
         return args[1], args[2]
