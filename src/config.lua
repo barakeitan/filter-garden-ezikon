@@ -7,8 +7,8 @@
 ]]
 
 local config = {
-    inputPath = "./data/Message-Spec-Example.json",
-    outputPath = "./output/Message-Spec-Example.lua"
+    inputPath = "./data/structs.json",
+    outputPath = "./output/structs.lua"
 }
 
 return config

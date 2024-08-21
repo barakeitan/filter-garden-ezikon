@@ -6,32 +6,21 @@ local JsonParser = require("JsonParser")
 local Formatter = require("Formatter")
 local FileOperations = require("FileOperations")
 local JsonFieldExtractor = require("JsonFieldExtractor")
-local config = require("config")
+local ArgumentParser = require("ArgumentParser")
 
--- Main function to create a filter from a JSON ICD
-function Create_filter(inputPath, outputPath)
-    local luaTable = JsonParser.jsonFileToTable(inputPath)
-    JsonFieldExtractor.load_json_icd(luaTable)
+--- Main function to create a filter from a JSON json_icd
+--- @param inputPath string The input path given.
+--- @param outputPath string The output path given.
+--- @return written File with Lua Code.
+local function create_filter(inputPath, outputPath)
+    local luaTable = JsonParser.json_file_to_table(inputPath)
     local json_icd = JsonFieldExtractor.get_json_icd(luaTable)
-
-    -- Format tables and write to file
-    --local formattedTables = Formatter.formatTables(json_icd)
-    FileOperations.writeFile(outputPath, json_icd)
+    local lua_output = Formatter.generate_lua_output(json_icd)
+    FileOperations.write_file(outputPath, lua_output)
 
     print("Conversion complete. Output written to " .. outputPath)
 end
 
--- Function to parse command line arguments
-local function parseArguments(...)
-    local args = {...}
-    if #args >= 2 then
-        return args[1], args[2]
-    else
-        return config.inputPath, config.outputPath
-    end
-end
+local inputFilePath, outputFilePath = ArgumentParser.parse_arguments()
 
--- Main execution
-local inputFilePath, outputFilePath = parseArguments()
-
-Create_filter(inputFilePath, outputFilePath)
+create_filter(inputFilePath, outputFilePath)

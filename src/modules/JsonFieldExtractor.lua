@@ -1,232 +1,249 @@
+--- @module JsonFieldExtractor
+-- This module is responsible for extracting and processing fields from a JSON-based ICD (Interface Control Document).
+-- It includes functions for parsing header fields, body fields, and other structure definitions from the JSON table.
+
 -- File: src/modules/JsonFieldExtractor.lua
 
-package.path = package.path .. ";./src/modules/?.lua"
-local Formatter = require("Formatter")
+-- Extend the package path to include the module directory
+package.path = package.path .. ";./src/modules/?.lua;./src/utils/utils.lua"
+local utils = require("src.utils.Utils")
 
--- Create a table to hold the module functions
+local extract_json_field, extract_json_struct
+
 local JsonFieldExtractor = {}
 
 -- Internal table for storing parsed JSON information
 local json_icd = {}
 
--- Function to parse constraints
+--- Parses numeric range constraints (e.g., min/max values).
+--- @param constraints table A table containing field constraints.
+--- @return table table with min and max values, or `nil` if not found.
+--- @raise Raises an error if the constraints table is invalid or missing required information.
 local function parse_min_max(constraints)
-    if not constraints or #constraints == 0 then
-        return nil
+    if type(constraints) ~= "table" then
+        utils.json_field_extractor_raise_error("Invalid constraints type. Expected table.", "parse_min_max")
     end
-
-    local constraint_str = nil
     for _, constraint in ipairs(constraints) do
         if constraint.type == "NumericRangeConstraintSpec" then
-            local min = constraint.ranges[1].min
-            local max = constraint.ranges[1].max
-            constraint_str = {min = min, max = max}
+            if not constraint.ranges or type(constraint.ranges) ~= "table" then
+                utils.json_field_extractor_raise_error("Invalid range specification in constraints.", "parse_min_max")
+            end
+            local range = constraint.ranges[1]
+            if range.min == nil or range.max == nil then
+                utils.json_field_extractor_raise_error("Range must contain both min and max values.", "parse_min_max")
+            end
+            return { min = range.min, max = range.max }
         end
     end
-    return constraint_str
+    return nil
 end
 
--- Function to extract information about a field from the JSON structure
-local function extract_json_field(field_table)
-    local field = {}
-    field.name = field_table.name
+--- Determines the data type of a field based on decoding information.
+--- @param field_table table A table containing the field's details.
+--- @return string string representing the data type (e.g., "int32_t", "float").
+--- @raise Raises an error if the field table or decoding information is invalid.
+local function parse_data_type(field_table)
+    if type(field_table) ~= "table" then
+        utils.json_field_extractor_raise_error("Invalid field_table provided.", "parse_data_type")
+    end
+    
+    if field_table.type == "ObjectFieldSpec" then return field_table.name end
 
-    -- Determine the data type
-    if field_table.fieldDecoding.numberType and field_table.fieldDecoding.numberType ~= "int" then 
-        field.data_type = field_table.fieldDecoding.numberType
-    else 
-        if field_table.fieldDecoding.signed then
-            field.data_type = "int"
-        else
-            field.data_type = "uint"
-        end
+    local decoding = field_table.fieldDecoding
+    
+    if decoding.numberType and decoding.numberType ~= "int" then
+        return decoding.numberType
+    end
+    
+    local field_size = field_table.dataExtraction and field_table.dataExtraction.endOffset and field_table.dataExtraction.endOffset.size
+    if not field_size then
+        utils.json_field_extractor_raise_error("Field size information is missing or invalid.", "parse_data_type")
     end
 
-    -- Add the sign and size to the int
-    local field_size = field_table.dataExtraction.endOffset.size
-    field.data_type = field.data_type .. (field_size * 8) .. "_t"
+    local is_signed = decoding.signed
+    local base_type = is_signed and "int" or "uint"
+    local data_type = base_type .. (field_size * 8) .. "_t"
+    -- TODO: check this
+    if not (data_type:match("_t$") or data_type == "float" or data_type == "double" or data_type == "int") then
+        utils.json_field_extractor_raise_error("Unsupported or invalid data type: " .. data_type, "parse_data_type")
+    end
 
-    -- Parse data-type
-    --field.data_type = parse_data_type(field_table)
+    return data_type
+end
 
-    -- Add the constraints (ranges)
-    field.valid_value = parse_min_max(field_table.constraints)
-    -- Handle type_id and enumeration for message types
-    if field_table.semantics and field_table.semantics.type == "MessageTypeSemanticsSpec" then
-        field.type_id = true
-        local keys = {}
-        json_icd.messages = json_icd.messages or {}
-        
-        for _, msg_child in pairs(field_table.semantics.options) do
-            json_icd.messages[tonumber(msg_child.key)] = {
-                name = msg_child.label,
-                fields = {}
-            }
-            table.insert(keys, msg_child.key)
+--- Parses message enumeration semantics.
+--- @param semantics table A table containing the semantics options.
+--- @return table table of enumerated keys.
+--- @raise Raises an error if the semantics table is invalid or missing required fields.
+local function parse_message_enumeration(semantics)
+    if type(semantics) ~= "table" or not semantics.options then
+        utils.json_field_extractor_raise_error("Invalid semantics for message enumeration. Expected table with options.", "parse_message_enumeration")
+    end
+    local keys = {}
+    json_icd.messages = json_icd.messages or {}
+    for _, msg_child in pairs(semantics.options) do
+        if not msg_child.key or not msg_child.label then
+            utils.json_field_extractor_raise_error("Each message option must contain a key and label.", "parse_message_enumeration")
         end
-        
-        field.valid_value = {enum = keys}
+        local key = tonumber(msg_child.key)
+        if not key then
+            utils.json_field_extractor_raise_error("Message key must be a valid number.", "parse_message_enumeration")
+        end
+        json_icd.messages[key] = {
+            name = msg_child.label,
+            fields = {}
+        }
+        table.insert(keys, key)
+    end
+    return keys
+end
+
+--- Parses exact values specified in semantics (for single-value constant).
+--- @param semantics table A table containing the semantics options.
+--- @return table table containing the exact value(s).
+--- @raise Raises an error if the semantics table is invalid or missing required fields.
+local function parse_exacts_values(semantics)
+    if type(semantics) ~= "table" or not semantics.value then
+        utils.json_field_extractor_raise_error("Invalid semantics for exact values. Expected table with a value.", "parse_exacts_values")
+    end
+    return {semantics.value}
+end
+
+--- Extracts the structure definition from the JSON table.
+--- @param object_table table A table containing the object specification.
+--- @return string name of the extracted structure.
+--- @raise Raises an error if the structure definition is invalid or incomplete.
+function extract_json_struct(object_table)
+    local struct_name = object_table.name
+    if not utils.struct_exists(json_icd.struct_def, struct_name) then
+        table.insert(json_icd.structs_def, struct_name)
+        json_icd.structs[struct_name] = {}
+        for _, child_field in ipairs(object_table.children) do
+            table.insert(json_icd.structs[struct_name], extract_json_field(child_field))
+        end
+    end
+    return struct_name
+end
+
+--- Extracts and organizes information from a field table.
+--- @param field_table table A table containing the field's details.
+--- @return table table representing the extracted field.
+--- @raise Raises an error if the field table is invalid or missing required information.
+function extract_json_field(field_table)
+    if type(field_table) ~= "table" or not field_table.name then
+        utils.json_field_extractor_raise_error("Invalid field_table provided. Expected a table with a name field.", "extract_json_field")
+    end
+    
+    local field = {
+        name = field_table.name,
+    }
+
+    if field_table.type == "ObjectFieldSpec" then
+        extract_json_struct(field_table.objectSpec)
+        field.data_type = field_table.objectSpec.name .. "_t"
+    else
+        field.data_type = parse_data_type(field_table)
+        field.valid_value = parse_min_max(field_table.constraints)
+
+        if field_table.semantics then
+            if field_table.semantics.type == "MessageTypeSemanticsSpec" then
+                field.type_id = true
+                field.valid_value = { enum = parse_message_enumeration(field_table.semantics) }
+            elseif field_table.semantics.type == "NumberConstant" then
+                field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
+            elseif field_table.semantics.type == "HexConstant" then
+                field_table.semantics.value = Utils.hex_string_to_integer(field_table.semantics.value)
+                field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
+            elseif field_table.semantics.type == 'none' or field_table.semantics.type == 'MessageLengthSemanticsSpec' or
+                field_table.semantics.type == 'gap' then
+                -- TODO: Optionally add a gap comment here for better context
+            else
+                utils.json_field_extractor_raise_error("Unsupported semantics type: " .. field_table.semantics.type, "extract_json_field")
+            end
+        end
     end
 
     return field
 end
 
--- Function to extract header fields from the JSON structure
-function JsonFieldExtractor.extract_json_header(json_table)
-    local header = {}
-    for _, child in ipairs(json_table.messageSpec.spec.children[1].objectSpec.children) do
-        table.insert(header, extract_json_field(child))
+--- Extracts the header fields from the JSON table.
+--- @param json_table table A Lua table representing the JSON structure.
+--- @return table list of parsed header fields.
+--- @raise Raises an error if the JSON table structure is invalid or incomplete.
+local function extract_json_header(json_table)
+    if type(json_table) ~= "table" or not json_table.messageSpec or not json_table.messageSpec.spec then
+        utils.json_field_extractor_raise_error("Invalid JSON table structure for extracting header.", "extract_json_header")
     end
-    return header
+    local header_fields = {}
+    local children = json_table.messageSpec.spec.children[1].objectSpec.children
+    if not children or type(children) ~= "table" then
+        utils.json_field_extractor_raise_error("Header fields are missing or improperly structured.", "extract_json_header")
+    end
+    for _, child in ipairs(children) do
+        table.insert(header_fields, extract_json_field(child))
+    end
+    return header_fields
 end
 
--- Function to extract body fields from the JSON structure
-function JsonFieldExtractor.extract_json_body(json_table)
-    if json_icd.messages then
-        for msg_code, msg_body in pairs(json_table.messageSpec.spec.children[2].caseOptions) do
-            local message_key = tonumber(msg_code)
-            local message = json_icd.messages[message_key]
-            if message then
-                for _, child_field in ipairs(msg_body.objectSpec.children) do
-                    table.insert(message.fields, extract_json_field(child_field))
-                end
-            end
+--- Extracts the body fields from the JSON table.
+-- Returns a table with the extracted message fields and names based on message codes.
+--- @param json_table table A Lua table representing the JSON structure.
+--- @return table table in the same format as json_icd.messages with names and extracted fields.
+--- @raise Raises an error if the JSON table structure is invalid or incomplete.
+local function extract_json_body(json_table)
+    if type(json_table) ~= "table" or not json_table.messageSpec or not json_table.messageSpec.spec then
+        utils.json_field_extractor_raise_error("Invalid JSON table structure for extracting body.", "extract_json_body")
+    end
+
+    local body_cases = json_table.messageSpec.spec.children[2] and json_table.messageSpec.spec.children[2].caseOptions
+    if not body_cases or type(body_cases) ~= "table" then
+        utils.json_field_extractor_raise_error("Body cases are missing or improperly structured.", "extract_json_body")
+    end
+
+    local extracted_messages = {}
+
+    for msg_code, msg_body in pairs(body_cases) do
+        local message_key = tonumber(msg_code)
+        local message = {
+            name = json_icd.messages[message_key].name,
+            fields = {}
+        }
+
+        local fields = msg_body.objectSpec and msg_body.objectSpec.children
+        if not fields or type(fields) ~= "table" then
+            utils.json_field_extractor_raise_error("Fields for message code " .. msg_code .. " are missing or improperly structured.", "extract_json_body")
         end
+
+        for _, child_field in ipairs(fields) do
+            table.insert(message.fields, extract_json_field(child_field))
+        end
+
+        extracted_messages[message_key] = message
     end
+
+    return extracted_messages
 end
 
--- Function to load JSON structure into a custom Lua table format
-function JsonFieldExtractor.load_json_icd(json_table)
-    json_icd.header_record = JsonFieldExtractor.extract_json_header(json_table)
-    JsonFieldExtractor.extract_json_body(json_table)
+--- Loads and processes the entire JSON table, extracting header and body fields.
+--- @param json_table table table representing the JSON structure.
+local function load_json_icd(json_table)
+    json_icd.protocol_name = json_table.name
+    json_icd.structs_def = {}
+    json_icd.structs = {}
+    json_icd.header_record = extract_json_header(json_table)
+    json_icd.messages = extract_json_body(json_table)
 end
 
--- Function to generate Lua code for header record
-local function generate_header_code()
-    return "-- Header Message\nlocal header_record = {\n" .. JsonFieldExtractor.table_to_string(json_icd.header_record, 0) .. "\n}\n\n"
-end
-
--- Function to generate Lua code for individual message definitions
-local function generate_messages_code()
-    local output = ""
-    for key, message in pairs(json_icd.messages) do
-        output = output .. "-- " .. string.upper(message.name) .. "\n" .. "local " .. message.name .. " = {\n  name = \"" .. message.name .. "\",\n  fields = {\n"
-        output = output .. JsonFieldExtractor.table_to_string(message.fields, 1) .. "\n"
-        output = output .. "  }\n}\n\n"
-    end
-    return output
-end
-
--- Function to generate Lua code for the messages table
-local function generate_messages_table_code()
-    local output = "\n-- Messages Definition Table\nlocal messages = {\n"
-    for key, message in pairs(json_icd.messages) do
-        output = output .. "  [" .. key .. "] = " .. message.name .. ",\n"
-    end
-    output = output .. "}\n"
-    return output
-end
-
--- Function that implememt the structs table definition and the structures itself
--- Unimplemented
-local function generate_structs_table()
-    local output = "\nֿֿֿֿֿ-- Structs Definition Table\nlocal structs = {\n"
-    json_icd.structs = json_icd.structs or {}
-    for key, message in pairs(json_icd.structs) do
-        
-    end
-    output = output .. "}\n"
-    return output
-end
-
--- Main function to generate the complete Lua output
-function JsonFieldExtractor.generate_lua_output()
-    local output = '--[[\n\tThis Lua Code is generated by the Filter-Garden Project "Azikon"\n]]\n\n'
-    output = output .. generate_header_code()
-    output = output .. generate_messages_code()
-    output = output .. generate_structs_table()
-    output = output .. generate_messages_table_code()
-    output = output .. "\ngenerate_filter_code(header_record, messages, structs)"
-    return output
-end
-
--- Function to generate and return the processed json_icd data and Lua output
+--- Main entry point for getting the processed JSON ICD information.
+--- @param json_table table A Lua table representing the JSON structure.
+--- @return table json_icd table containing all extracted information.
+--- @raise Raises an error if the input is not a valid table.
 function JsonFieldExtractor.get_json_icd(json_table)
-    JsonFieldExtractor.load_json_icd(json_table)
-    local lua_output = JsonFieldExtractor.generate_lua_output()
-    -- return json_icd
-    return lua_output
+    if type(json_table) ~= "table" then
+        utils.json_field_extractor_raise_error("Invalid input. Expected a table for JSON ICD processing.", "get_json_icd")
+    end
+    load_json_icd(json_table)
+    return json_icd
 end
 
--- Helper function to convert a Lua table to a string with proper formatting and field order
-function JsonFieldExtractor.table_to_string(tbl, indent)
-    indent = indent or 0
-    local result = "" -- Start with an empty string
-    local padding = string.rep("  ", indent + 1)
-
-    for _, v in ipairs(tbl) do
-        result = result .. padding .. "{ "
-        
-        -- Define the order of the keys
-        local ordered_keys = { "name", "data_type", "valid_value" }
-        
-        -- Process the ordered keys first
-        for _, key in ipairs(ordered_keys) do
-            local value = v[key]
-            if value then
-                if key == "valid_value" and type(value) == "table" then
-                    result = result .. key .. " = { "
-                    if value.enum then
-                        result = result .. "enum = { " .. table.concat(value.enum, ", ") .. " }"
-                    elseif value[1] and value[1].exact then
-                        -- Handling multiple exact values
-                        for _, exact_entry in ipairs(value) do
-                            result = result .. "{ exact = " .. exact_entry.exact .. " }, "
-                        end
-                    else
-                        local min = value.min or ""
-                        local max = value.max or ""
-                        result = result .. "min = " .. min .. ", max = " .. max
-                    end
-                    result = result .. " }, "
-                elseif type(value) == "table" then
-                    result = result .. key .. " = " .. JsonFieldExtractor.table_to_string({value}, indent + 1) .. ", "
-                else
-                    if type(value) == "string" then
-                        value = "\"" .. value .. "\""
-                    end
-                    result = result .. key .. " = " .. tostring(value) .. ", "
-                end
-            end
-        end
-        
-        -- Process any remaining keys that are not in the ordered list
-        for key, value in pairs(v) do
-            if not (key == "name" or key == "data_type" or key == "valid_value") then
-                if type(value) == "table" then
-                    result = result .. key .. " = " .. JsonFieldExtractor.table_to_string({value}, indent + 1) .. ", "
-                else
-                    if type(value) == "string" then
-                        value = "\"" .. value .. "\""
-                    end
-                    result = result .. key .. " = " .. tostring(value) .. ", "
-                end
-            end
-        end
-
-        result = result:sub(1, -3) -- Remove the trailing comma and space
-        result = result .. " },\n"
-    end
-
-    result = result .. string.rep("  ", indent)
-
-    -- Remove the last newline character
-    if result:sub(-2) == ",\n" then
-        result = result:sub(1, -3) -- Removes ",\n" at the end
-    end
-
-    return result
-end
-    
-    
 return JsonFieldExtractor

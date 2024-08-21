@@ -1,44 +1,57 @@
 {
-    "id": "f36837ea-3693-4703-9cc9-4b447070e009",
-    "name": "Demo",
+    "id": "a6c24864-e399-4ec9-8d85-0034215b04d2",
+    "name": "Simplest",
     "description": "",
     "creator": "Proto01_3 proto01_1",
-    "lastModifiedTimestamp": 1713162877035,
-    "createdTimestamp": 1713089951185,
+    "lastModifiedTimestamp": 1720529750497,
+    "createdTimestamp": 1720088005639,
     "hexMode": false,
     "messageSpec": {
         "spec": {
-            "id": "01c78998-a86f-4e46-b5f7-b2e51e92db6b",
+            "id": "836bf367-41ad-499a-9417-cd5e6973d969",
             "name": "messageSpec",
             "type": "ObjectSpec",
             "children": [
                 {
-                    "id": "17eea986-5aca-4f4f-90ed-a5b077e4e95f",
                     "name": "header",
                     "type": "ObjectFieldSpec",
                     "objectSpec": {
-                        "id": "17eea986-5aca-4f4f-90ed-a5b077e4e95f",
+                        "id": "362254fa-5d5b-400a-9fc9-a8ad388ea00c",
                         "name": "Header",
                         "type": "ObjectSpec",
                         "children": [
                             {
-                                "id": "3cfefb6e-61bf-4ed5-b09b-9337686bef90",
-                                "name": "constant",
+                                "name": "version",
                                 "type": "FieldSpec",
-                                "hexMode": true,
+                                "hexMode": false,
                                 "semantics": {
-                                    "type": "HexConstant",
-                                    "value": "aa55"
+                                    "type": "none"
                                 },
-                                "constraints": [],
+                                "constraints": [
+                                    {
+                                        "id": "89ec355d-27aa-4c48-a078-57245b10feb5",
+                                        "name": "version valid values constraint",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 5,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
                                 "fieldDecoding": {
-                                    "type": "HexRawFieldDecodingSpec"
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
                                 },
                                 "dataExtraction": {
                                     "type": "DataExtractionSpec",
                                     "endOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 1
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
                                     },
                                     "startOffset": {
                                         "type": "RelativeToMessageStartOffsetConfig",
@@ -47,55 +60,6 @@
                                 }
                             },
                             {
-                                "id": "eb08593b-c18b-4f69-8945-a1ce1dbaf4a0",
-                                "name": "Message Source",
-                                "type": "FieldSpec",
-                                "hexMode": false,
-                                "semantics": {
-                                    "type": "message-source"
-                                },
-                                "constraints": [],
-                                "fieldDecoding": {
-                                    "type": "RawFieldDecodingSpec"
-                                },
-                                "dataExtraction": {
-                                    "type": "DataExtractionSpec",
-                                    "endOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 3
-                                    },
-                                    "startOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 2
-                                    }
-                                }
-                            },
-                            {
-                                "id": "cedccad3-b9be-4ebc-ad89-fec2a35d21e3",
-                                "name": "Message Destination",
-                                "type": "FieldSpec",
-                                "hexMode": false,
-                                "semantics": {
-                                    "type": "message-destination"
-                                },
-                                "constraints": [],
-                                "fieldDecoding": {
-                                    "type": "RawFieldDecodingSpec"
-                                },
-                                "dataExtraction": {
-                                    "type": "DataExtractionSpec",
-                                    "endOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 5
-                                    },
-                                    "startOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 4
-                                    }
-                                }
-                            },
-                            {
-                                "id": "9dc47784-a3ce-45b0-92f2-dc75efaf71d3",
                                 "name": "msg_type",
                                 "type": "FieldSpec",
                                 "hexMode": false,
@@ -103,14 +67,14 @@
                                     "type": "MessageTypeSemanticsSpec",
                                     "options": [
                                         {
-                                            "key": "11",
+                                            "key": "1",
                                             "type": "MessageTypeOption",
-                                            "label": "array"
+                                            "label": "hello_msg"
                                         },
                                         {
                                             "key": "21",
                                             "type": "MessageTypeOption",
-                                            "label": "string"
+                                            "label": "structs_exmaple_msg"
                                         }
                                     ]
                                 },
@@ -121,63 +85,71 @@
                                 "dataExtraction": {
                                     "type": "DataExtractionSpec",
                                     "endOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 6
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
                                     },
                                     "startOffset": {
                                         "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 6
+                                        "value": 1
                                     }
                                 }
                             },
                             {
-                                "id": "0a3ff3a3-5b73-423b-9134-94159ef788ec",
-                                "name": "gap",
+                                "name": "family",
                                 "type": "FieldSpec",
                                 "hexMode": false,
                                 "semantics": {
-                                    "type": "gap",
-                                    "description": "This is a gap"
+                                    "type": "none"
                                 },
-                                "constraints": [],
+                                "constraints": [
+                                    {
+                                        "id": "5fe3affa-6b6b-41d2-a2be-4ee42c236b4e",
+                                        "name": "family value constraint",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 6,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
                                 "fieldDecoding": {
-                                    "type": "RawFieldDecodingSpec"
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
                                 },
                                 "dataExtraction": {
                                     "type": "DataExtractionSpec",
                                     "endOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 8
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
                                     },
                                     "startOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 7
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./msg_type"
                                     }
                                 }
                             },
                             {
-                                "id": "33b5866f-bf56-4e2d-90bf-bc0a432901d9",
-                                "name": "number",
+                                "name": "len",
                                 "type": "FieldSpec",
                                 "hexMode": false,
                                 "semantics": {
-                                    "type": "ChangingMonotonicitySemanticsSpec",
-                                    "monotonicityType": "increasing"
+                                    "type": "MessageLengthSemanticsSpec",
+                                    "diffFromMessageSize": 6
                                 },
                                 "constraints": [
                                     {
-                                        "id": "eb9b2ff0-00ce-4458-84f3-b9269c022dd3",
-                                        "name": "number constraint",
+                                        "id": "c0d32e2f-2271-411f-a48d-5d81c2c60711",
+                                        "name": "new constraint",
                                         "type": "NumericRangeConstraintSpec",
                                         "ranges": [
                                             {
-                                                "max": 20,
+                                                "max": 2147483647,
                                                 "min": 0,
-                                                "type": "NumberMinMaxRange"
-                                            },
-                                            {
-                                                "max": 120,
-                                                "min": 100,
                                                 "type": "NumberMinMaxRange"
                                             }
                                         ]
@@ -196,36 +168,35 @@
                                         "type": "FieldSizeOffsetConfig"
                                     },
                                     "startOffset": {
-                                        "type": "RelativeToMessageStartOffsetConfig",
-                                        "value": 9
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./family"
                                     }
                                 }
                             },
                             {
-                                "id": "8fb0a310-3d1b-47ca-b14c-defea470bc25",
-                                "name": "checksum",
+                                "name": "padding",
                                 "type": "FieldSpec",
                                 "hexMode": false,
                                 "semantics": {
-                                    "type": "ChecksumSemanticsSpec",
-                                    "algorithm": "Adler-16",
-                                    "endianness": "LE",
-                                    "dstFieldEndOffset": 10,
-                                    "dstFieldStartOffset": 0
+                                    "type": "NumberConstant",
+                                    "value": 0
                                 },
                                 "constraints": [],
                                 "fieldDecoding": {
-                                    "type": "RawFieldDecodingSpec"
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
                                 },
                                 "dataExtraction": {
                                     "type": "DataExtractionSpec",
                                     "endOffset": {
-                                        "size": 2,
+                                        "size": 1,
                                         "type": "FieldSizeOffsetConfig"
                                     },
                                     "startOffset": {
                                         "type": "RelativeToFieldOffsetConfig",
-                                        "fieldPath": "/header/number"
+                                        "fieldPath": "./len"
                                     }
                                 }
                             }
@@ -237,22 +208,19 @@
                     }
                 },
                 {
-                    "id": "2ee83d42-1804-4c5a-87c8-e9fd191eeb75",
                     "name": "body",
                     "type": "SwitchCaseFieldSpec",
                     "caseOptions": {
-                        "11": {
-                            "id": "07a0bad7-c538-4894-890b-beb4454f0e7b",
-                            "name": "array",
+                        "1": {
+                            "name": "hello_msg",
                             "type": "ObjectFieldSpec",
                             "objectSpec": {
-                                "id": "a5dc01dd-7b31-481d-aafe-c2ec6eb5a4a4",
+                                "id": "6873f822-eb68-48d9-8e3c-6906c12c5426",
                                 "name": "Body",
                                 "type": "ObjectSpec",
                                 "children": [
                                     {
-                                        "id": "030b8fef-6309-406e-8567-6cae5beb3fd9",
-                                        "name": "array_size",
+                                        "name": "bienvenue",
                                         "type": "FieldSpec",
                                         "hexMode": false,
                                         "semantics": {
@@ -260,13 +228,13 @@
                                         },
                                         "constraints": [
                                             {
-                                                "id": "879a4dd3-02ee-462a-af7a-8495223cf71a",
-                                                "name": "array size constraint",
+                                                "id": "47d4f3fc-1417-4e70-b8fc-7f9c5a03d726",
+                                                "name": "bienvenue value constraint",
                                                 "type": "NumericRangeConstraintSpec",
                                                 "ranges": [
                                                     {
-                                                        "max": 200,
-                                                        "min": 0,
+                                                        "max": 18047,
+                                                        "min": 2,
                                                         "type": "NumberMinMaxRange"
                                                     }
                                                 ]
@@ -274,25 +242,24 @@
                                         ],
                                         "fieldDecoding": {
                                             "type": "NumberFieldDecodingSpec",
-                                            "signed": false,
+                                            "signed": true,
                                             "endianness": "LE",
                                             "numberType": "int"
                                         },
                                         "dataExtraction": {
                                             "type": "DataExtractionSpec",
                                             "endOffset": {
-                                                "size": 1,
+                                                "size": 2,
                                                 "type": "FieldSizeOffsetConfig"
                                             },
                                             "startOffset": {
                                                 "type": "RelativeToMessageStartOffsetConfig",
-                                                "value": 13
+                                                "value": 0
                                             }
                                         }
                                     },
                                     {
-                                        "id": "6d76104d-92a0-4e63-a2e9-e77c12f4e398",
-                                        "name": "array_of_numbers",
+                                        "name": "welcome",
                                         "type": "FieldSpec",
                                         "hexMode": false,
                                         "semantics": {
@@ -300,12 +267,78 @@
                                         },
                                         "constraints": [
                                             {
-                                                "id": "89dcd569-0013-43e9-aae8-aaf2a98c03e5",
-                                                "name": "array elements constraints",
+                                                "id": "8a20e9bd-f3cc-4e5b-9761-b3b74704122d",
+                                                "name": "welcome value constraint",
                                                 "type": "NumericRangeConstraintSpec",
                                                 "ranges": [
                                                     {
-                                                        "max": 200,
+                                                        "max": 9,
+                                                        "min": 4,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "float"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 4,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./bienvenue"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "padding",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "NumberConstant",
+                                            "value": 0
+                                        },
+                                        "constraints": [],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "LE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 8,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./welcome"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "ok",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "3e58b79a-ce7d-4d05-a83c-731ae901a08d",
+                                                "name": "ok value constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 2147483647,
                                                         "min": 0,
                                                         "type": "NumberMinMaxRange"
                                                     }
@@ -321,21 +354,21 @@
                                         "dataExtraction": {
                                             "type": "DataExtractionSpec",
                                             "endOffset": {
-                                                "type": "ArrayOffsetConfig",
-                                                "itemSize": 8,
-                                                "arraySizeFieldPath": "/body/11/array_size"
+                                                "size": 1,
+                                                "type": "FieldSizeOffsetConfig"
                                             },
                                             "startOffset": {
-                                                "type": "RelativeToMessageStartOffsetConfig",
-                                                "value": 14
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./padding"
                                             }
                                         }
                                     }
+                                    
                                 ]
                             },
                             "startOffset": {
-                                "type": "RelativeToMessageStartOffsetConfig",
-                                "value": 0
+                                "type": "RelativeToFieldOffsetConfig",
+                                "fieldPath": "./header"
                             }
                         },
                         "21": {
@@ -366,8 +399,7 @@
                                                         "type": "ObjectSpec",
                                                         "children": [
                                                             {
-                                                                "id": "a1a75b1e-d23c-4990-8394-0a083b88bf08",
-                                                                "name": "letters",
+                                                                "name": "version-letters",
                                                                 "type": "FieldSpec",
                                                                 "hexMode": false,
                                                                 "semantics": {
@@ -375,42 +407,29 @@
                                                                 },
                                                                 "constraints": [
                                                                     {
-                                                                        "id": "18c6426c-48f5-4df5-a694-9b937df6d0e1",
-                                                                        "max": 2,
-                                                                        "min": 0,
-                                                                        "name": "string size constraint",
-                                                                        "type": "StringSizeConstraintSpec"
-                                                                    },
-                                                                    {
-                                                                        "id": "5fa6aff7-1bb1-46c5-b313-1dbc33048f02",
-                                                                        "abc": [
-                                                                            "upper"
-                                                                        ],
-                                                                        "name": "new constraint",
-                                                                        "type": "StringCharRulesConstraintSpec",
-                                                                        "blackList": [
-                                                                            "M"
-                                                                        ],
-                                                                        "whiteList": []
-                                                                    },
-                                                                    {
-                                                                        "id": "f07a8155-e045-4a33-be1e-06d4fa54a7b7",
-                                                                        "name": "regex constraint",
-                                                                        "type": "StringRegexConstraintSpec",
-                                                                        "patternType": "allowed",
-                                                                        "regexPattern": "[A-Z ]+"
+                                                                        "id": "89ec355d-27aa-4c48-a078-57245b10feb5",
+                                                                        "name": "version valid values constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 5,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
                                                                     }
                                                                 ],
-                                                                "fieldDecoding": { 
-                                                                    "type": "StringFieldDecodingSpec",
-                                                                    "escape": "\\",
-                                                                    "charset": "ASCII"
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "LE",
+                                                                    "numberType": "int"
                                                                 },
                                                                 "dataExtraction": {
                                                                     "type": "DataExtractionSpec",
                                                                     "endOffset": {
-                                                                        "type": "RelativeToMessageStartOffsetConfig",
-                                                                        "value": 1
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
                                                                     },
                                                                     "startOffset": {
                                                                         "type": "RelativeToMessageStartOffsetConfig",
@@ -436,8 +455,7 @@
                                                         "type": "ObjectSpec",
                                                         "children": [
                                                             {
-                                                                "id": "8ab7aa5f-22a7-447f-a4b8-905d76878cc3",
-                                                                "name": "digits",
+                                                                "name": "version-digits",
                                                                 "type": "FieldSpec",
                                                                 "hexMode": false,
                                                                 "semantics": {
@@ -445,33 +463,29 @@
                                                                 },
                                                                 "constraints": [
                                                                     {
-                                                                        "id": "c4bbad62-5857-4d80-a196-6834199485ac",
-                                                                        "max": 5,
-                                                                        "min": 0,
-                                                                        "name": "string size constraint",
-                                                                        "type": "StringSizeConstraintSpec"
-                                                                    },
-                                                                    {
-                                                                        "id": "5fa6aff7-1bb1-46c5-b313-1dbc33048f02",
-                                                                        "abc": [
-                                                                            "digits"
-                                                                        ],
-                                                                        "name": "new constraint",
-                                                                        "type": "StringCharRulesConstraintSpec",
-                                                                        "blackList": [],
-                                                                        "whiteList": []
+                                                                        "id": "89ec355d-27aa-4c48-a078-57245b10feb5",
+                                                                        "name": "version valid values constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 5,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
                                                                     }
                                                                 ],
                                                                 "fieldDecoding": {
-                                                                    "type": "StringFieldDecodingSpec",
-                                                                    "escape": "\\",
-                                                                    "charset": "ASCII"
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "LE",
+                                                                    "numberType": "int"
                                                                 },
                                                                 "dataExtraction": {
                                                                     "type": "DataExtractionSpec",
                                                                     "endOffset": {
-                                                                        "type": "RelativeToMessageStartOffsetConfig",
-                                                                        "value": 3
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
                                                                     },
                                                                     "startOffset": {
                                                                         "type": "RelativeToMessageStartOffsetConfig",
