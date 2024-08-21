@@ -43,6 +43,11 @@ local structs_exmaple_msg = {
 
 --------------- STRUCTS SECTION --------------
 
+-- FLIGHT_NUMBER
+local flight_number = {
+  { name = "letters", data_type = "flight_number_letters_t" },
+  { name = "digits", data_type = "flight_number_digits_t" }
+}
 -- FLIGHT_NUMBER_LETTERS
 local flight_number_letters = {
   { name = "version-letters", data_type = "int8_t", valid_value = { min = 0, max = 5 } }
@@ -50,11 +55,6 @@ local flight_number_letters = {
 -- FLIGHT_NUMBER_DIGITS
 local flight_number_digits = {
   { name = "version-digits", data_type = "int8_t", valid_value = { min = 0, max = 5 } }
-}
--- FLIGHT_NUMBER
-local flight_number = {
-  { name = "letters", data_type = "flight_number_letters_t" },
-  { name = "digits", data_type = "flight_number_digits_t" }
 }
 
 -----------------------------------------------

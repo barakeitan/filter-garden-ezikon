@@ -1,6 +1,6 @@
 -- File: src/main.lua
 
-package.path = package.path .. ";./src/?.lua;./src/modules/?.lua"
+package.path = package.path .. ";./src/?.lua;./src/modules/?.lua;./src/utils/?.lua"
 
 local JsonParser = require("JsonParser")
 local Formatter = require("Formatter")
