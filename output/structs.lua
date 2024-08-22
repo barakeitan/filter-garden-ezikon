@@ -7,10 +7,11 @@
 --------------- HEADER SECTION ---------------
 local header_record = {
   { name = "version", data_type = "int8_t", valid_value = { min = 0, max = 5 } },
-  { name = "msg_type", data_type = "uint8_t", valid_value = { enum = { 1, 21 } }, type_id = true },
+  { name = "msg_type", data_type = "uint8_t", type_id = true },
   { name = "family", data_type = "int8_t", valid_value = { min = 0, max = 6 } },
+	--   { name = "gap" }, NOTICE: This is a gap
   { name = "len", data_type = "int16_t", valid_value = { min = 0, max = 2147483647 } },
-  { name = "padding", data_type = "int8_t", valid_value = { exact = { 0 } } }
+  { name = "padding", data_type = "int8_t" },
 }
 ----------------------------------------------
 
@@ -23,8 +24,8 @@ local hello_msg = {
   fields = {
     { name = "bienvenue", data_type = "int16_t", valid_value = { min = 2, max = 18047 } },
     { name = "welcome", data_type = "float", valid_value = { min = 4, max = 9 } },
-    { name = "padding", data_type = "int64_t", valid_value = { exact = { 0 } } },
-    { name = "ok", data_type = "int8_t", valid_value = { min = 0, max = 2147483647 } }
+    { name = "padding", data_type = "int64_t" },
+    { name = "ok", data_type = "int8_t", valid_value = { min = 0, max = 2147483647 } },
   }
 }
 
@@ -35,7 +36,7 @@ local hello_msg = {
 local structs_exmaple_msg = {
   name = "structs_exmaple_msg",
   fields = {
-    { name = "flight_number", data_type = "flight_number_t" }
+    { name = "flight_number", data_type = "flight_number_t" },
   }
 }
 
@@ -43,18 +44,18 @@ local structs_exmaple_msg = {
 
 --------------- STRUCTS SECTION --------------
 
--- FLIGHT_NUMBER
-local flight_number = {
-  { name = "letters", data_type = "flight_number_letters_t" },
-  { name = "digits", data_type = "flight_number_digits_t" }
-}
 -- FLIGHT_NUMBER_LETTERS
 local flight_number_letters = {
-  { name = "version-letters", data_type = "int8_t", valid_value = { min = 0, max = 5 } }
+  { name = "version-letters", data_type = "int8_t", valid_value = { min = 0, max = 5 } },
 }
 -- FLIGHT_NUMBER_DIGITS
 local flight_number_digits = {
-  { name = "version-digits", data_type = "int8_t", valid_value = { min = 0, max = 5 } }
+  { name = "version-digits", data_type = "int8_t", valid_value = { min = 0, max = 5 } },
+}
+-- FLIGHT_NUMBER
+local flight_number = {
+  { name = "letters", data_type = "flight_number_letters_t" },
+  { name = "digits", data_type = "flight_number_digits_t" },
 }
 
 -----------------------------------------------

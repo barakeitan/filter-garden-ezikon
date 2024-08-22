@@ -5,7 +5,7 @@ package.path = package.path .. ";./src/modules/?.lua;./src/utils/?.lua"
 local Formatter = {}
 local Constants = require("Constants")
 
-local table_to_string
+local field_table_to_string
 --- Generates the Lua code for the header section of the output based on the provided JSON ICD.
 --- @param json_icd table The JSON structure containing the header information.
 --- @return string The Lua code string for the header section.
@@ -13,7 +13,7 @@ local function generate_header_code(json_icd)
     -- TODO: Change header based on 'json_icd' parameter
     return Constants.HEADER_SECTION_START ..
         "local header_record = {\n" ..
-        table_to_string(json_icd.header_record, 1) ..
+        field_table_to_string(json_icd.header_record, 1) ..
         "\n}\n" .. Constants.HEADER_SECTION_END
 end
 
@@ -27,7 +27,7 @@ local function generate_messages_code(json_icd)
         output = output .. "local " .. message.name .. " = {\n"
         output = output .. "  name = \"" .. message.name .. "\",\n"
         output = output .. "  fields = {\n" ..
-            table_to_string(message.fields, 2) ..
+            field_table_to_string(message.fields, 2) ..
             "\n  }\n}\n" .. Constants.MESSAGES_SECTION_END
     end
     return output .. "\n"
@@ -40,7 +40,7 @@ local function generate_structs(json_icd)
     local output = Constants.STRUCTS_SECTION_START
     for struct_name, fields in pairs(json_icd.structs) do
         output = output .. "-- " .. string.upper(struct_name) .. "\nlocal " .. struct_name .. " = {\n" ..
-            table_to_string(fields, 1) ..
+            field_table_to_string(fields, 1) ..
             "\n}\n"
     end
     return output .. Constants.STRUCTS_SECTION_END
@@ -83,40 +83,10 @@ function Formatter.generate_lua_output(json_icd)
     return output
 end
 
---- Converts a Lua table to a formatted string suitable for Lua code generation.
---- @param tbl table The Lua table to be converted.
---- @param indent number The indentation level for formatting.
---- @return string result The formatted Lua code string.
-function table_to_string(tbl, indent)
-    indent = indent or 0
-    local padding = string.rep("  ", indent)
-    local result = {}
-
-    for _, v in ipairs(tbl) do
-        local entry = padding .. "{ name = \"" .. v.name .. "\", data_type = \"" .. v.data_type .. "\""
-        
-        if v.bit_count then
-            entry = entry .. ", bit_count = " .. v.bit_count
-        end
-
-        if v.valid_value then
-            entry = entry .. ", valid_value = { " .. Formatter.valid_value_to_string(v.valid_value) .. " }"
-        end
-
-        if v.type_id then
-            entry = entry .. ", type_id = " .. tostring(v.type_id)
-        end
-
-        table.insert(result, entry .. " }")
-    end
-
-    return table.concat(result, ",\n")
-end
-
 --- Converts a valid_value table to a formatted string for Lua code generation.
 --- @param valid_value table The table containing the valid value details.
 --- @return string The formatted Lua code string for valid values.
-function Formatter.valid_value_to_string(valid_value)
+local function field_valid_value_to_string(valid_value)
     if valid_value.enum then
         return "enum = { " .. table.concat(valid_value.enum, ", ") .. " }"
     elseif valid_value.exact then
@@ -127,6 +97,46 @@ function Formatter.valid_value_to_string(valid_value)
         return min .. (min ~= "" and ", " or "") .. max
     end
     return ""
+end
+
+--- Converts a Lua table to a formatted string suitable for Lua code generation.
+--- @param tbl table The Lua table to be converted.
+--- @param indent number The indentation level for formatting.
+--- @return string result The formatted Lua code string.
+function field_table_to_string(tbl, indent)
+    indent = indent or 0
+    local padding = string.rep("  ", indent)
+    local result = {}
+
+    for _, field in ipairs(tbl) do
+        local entry = padding .. "{ name = \"" .. field.name .. "\""
+        if field.data_type then
+            entry = entry .. ", data_type = \"" .. field.data_type .. "\""
+        end        
+        if field.bit_count then
+            entry = entry .. ", bit_count = " .. field.bit_count
+        end
+
+        if field.valid_value then
+            entry = entry .. ", valid_value = { " .. field_valid_value_to_string(field.valid_value) .. " }"
+        end
+
+        if field.type_id then
+            entry = entry .. ", type_id = " .. tostring(field.type_id)
+        end
+
+        -- Check for gap properties and format accordingly
+    
+        if field.gap_notice then
+            table.insert(result, "\t-- " .. entry .. " }, " .. field.gap_bypass)
+        elseif field.gap_bypass then
+            table.insert(result, entry .. " }," .. " -- " .. field.gap_bypass)
+        else
+            table.insert(result, entry .. " },")
+        end
+    end
+
+    return table.concat(result, "\n")
 end
 
 return Formatter

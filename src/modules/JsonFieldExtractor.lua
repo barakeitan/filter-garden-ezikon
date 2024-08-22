@@ -5,8 +5,8 @@
 -- File: src/modules/JsonFieldExtractor.lua
 
 -- Extend the package path to include the module directory
-package.path = package.path .. ";./src/modules/?.lua;./src/utils/utils.lua"
-local utils = require("src.utils.Utils")
+package.path = package.path .. ";./src/modules/?.lua;./src/utils/?.lua"
+local utils = require("utils")
 
 local extract_json_field, extract_json_struct
 
@@ -142,9 +142,6 @@ function extract_json_field(field_table)
         extract_json_struct(field_table.objectSpec)
         field.data_type = field_table.objectSpec.name .. "_t"
     else
-        field.data_type = parse_data_type(field_table)
-        field.valid_value = parse_min_max(field_table.constraints)
-
         if field_table.semantics then
             if field_table.semantics.type == "MessageTypeSemanticsSpec" then
                 field.type_id = true
@@ -152,15 +149,30 @@ function extract_json_field(field_table)
             elseif field_table.semantics.type == "NumberConstant" then
                 field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
             elseif field_table.semantics.type == "HexConstant" then
-                field_table.semantics.value = Utils.hex_string_to_integer(field_table.semantics.value)
+                field_table.semantics.value = utils.hex_string_to_integer(field_table.semantics.value)
                 field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
-            elseif field_table.semantics.type == 'none' or field_table.semantics.type == 'MessageLengthSemanticsSpec' or
-                field_table.semantics.type == 'gap' then
-                -- TODO: Optionally add a gap comment here for better context
+            elseif field_table.semantics.type == 'none' or field_table.semantics.type == 'MessageLengthSemanticsSpec' then
+                -- TODO: Implement this edge-case 
+            elseif field_table.semantics.type == 'gap' then
+                --[[
+                    Check two things: 
+                    Whether the gap field hasn't a size param - GAP.NOTICE
+                    And if the gap field has size param and not valid_value - GAP.BYPASS
+                ]]
+                
+                -- field.gap_bypass = "NOTICE: " .. field_table.semantics.description
+                -- if next(field_table.constraints) == nil or next(field_table.dataExtraction) == nil then
+                --     field.gap_notice = true
+                -- end
             else
                 utils.json_field_extractor_raise_error("Unsupported semantics type: " .. field_table.semantics.type, "extract_json_field")
             end
         end
+        if not field.gap_notice then
+            field.data_type = parse_data_type(field_table)
+            field.valid_value = parse_min_max(field_table.constraints)    
+        end
+        
     end
 
     return field

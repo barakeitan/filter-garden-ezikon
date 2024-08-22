@@ -134,6 +134,31 @@
                                 }
                             },
                             {
+                                "id": "0a3ff3a3-5b73-423b-9134-94159ef788ec",
+                                "name": "gap",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "gap",
+                                    "description": "This is a gap"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                    "type": "RawFieldDecodingSpec"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "type": "RelativeToMessageStartOffsetConfig",
+                                        "value": 8
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToMessageStartOffsetConfig",
+                                        "value": 7
+                                    }
+                                }
+                            },
+                            {
                                 "name": "len",
                                 "type": "FieldSpec",
                                 "hexMode": false,
