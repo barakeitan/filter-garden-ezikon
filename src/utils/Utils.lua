@@ -28,6 +28,13 @@ function Utils.json_field_extractor_raise_error(msg, context)
     error(err_msg)
 end
 
+function Utils.valid_message_name(name)
+    local output = name:gsub("%s+", "_")  -- Replace one or more whitespaces with an underscore
+    output = output:gsub("[^a-zA-Z_]", "")  -- Remove any character that is not a letter or underscore
+
+    return output
+end
+
 --- @brief Checks if a specified structure name exists within a structure definition table.
 ---
 --- @param struct_def table A table containing the structure names.

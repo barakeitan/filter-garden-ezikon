@@ -7,8 +7,8 @@
 ]]
 
 local config = {
-    inputPath = "./data/structs.json",
-    outputPath = "./output/structs.lua"
+    inputPath = "./data/partial_dis_for_iaf.json",
+    outputPath = "./output/partial_dis_for_iaf.lua"
 }
 
 return config

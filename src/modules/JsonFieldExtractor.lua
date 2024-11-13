@@ -114,8 +114,8 @@ end
 --- @return string name of the extracted structure.
 --- @raise Raises an error if the structure definition is invalid or incomplete.
 function extract_json_struct(object_table)
-    local struct_name = object_table.name
-    if not utils.struct_exists(json_icd.struct_def, struct_name) then
+    local struct_name = utils.valid_message_name(object_table.name)
+    if not utils.struct_exists(json_icd.structs_def, struct_name) then
         table.insert(json_icd.structs_def, struct_name)
         json_icd.structs[struct_name] = {}
         for _, child_field in ipairs(object_table.children) do
@@ -153,6 +153,8 @@ function extract_json_field(field_table)
                 field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
             elseif field_table.semantics.type == 'none' or field_table.semantics.type == 'MessageLengthSemanticsSpec' then
                 -- TODO: Implement this edge-case 
+            elseif field_table.semantics.type == 'TimeSemanticsSpec' then
+                
             elseif field_table.semantics.type == 'gap' then
                 --[[
                     Check two things: 
@@ -160,10 +162,10 @@ function extract_json_field(field_table)
                     And if the gap field has size param and not valid_value - GAP.BYPASS
                 ]]
                 
-                -- field.gap_bypass = "NOTICE: " .. field_table.semantics.description
-                -- if next(field_table.constraints) == nil or next(field_table.dataExtraction) == nil then
-                --     field.gap_notice = true
-                -- end
+                field.gap_bypass = "NOTICE: " .. field_table.semantics.description
+                if next(field_table.constraints) == nil or next(field_table.dataExtraction) == nil then
+                    field.gap_notice = true
+                end
             else
                 utils.json_field_extractor_raise_error("Unsupported semantics type: " .. field_table.semantics.type, "extract_json_field")
             end
@@ -216,8 +218,9 @@ local function extract_json_body(json_table)
 
     for msg_code, msg_body in pairs(body_cases) do
         local message_key = tonumber(msg_code)
+        local message_name = utils.valid_message_name(json_icd.messages[message_key].name)
         local message = {
-            name = json_icd.messages[message_key].name,
+            name = message_name,
             fields = {}
         }
 

@@ -1,0 +1,2000 @@
+{
+    "id": "2e42162a-3e86-47c1-b826-bad6c34298a1",
+    "name": "DIS",
+    "description": "DIS protocol \n",
+    "creator": "Proto01_3 proto01_1",
+    "lastModifiedTimestamp": 1724759462920,
+    "createdTimestamp": 1724590843723,
+    "hexMode": false,
+    "messageSpec": {
+        "spec": {
+            "id": "a04ab725-ec73-42c8-8b65-f71ec4a06ca0",
+            "name": "messageSpec",
+            "type": "ObjectSpec",
+            "children": [
+                {
+                    "name": "header",
+                    "type": "ObjectFieldSpec",
+                    "objectSpec": {
+                        "id": "4a037e89-44b1-428b-bd62-4fa8fade7e02",
+                        "name": "Header",
+                        "type": "ObjectSpec",
+                        "children": [
+                            {
+                                "name": "Protocol_version",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "none"
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "225ee1de-6187-445b-9898-dfa27b9ea541",
+                                        "name": "version_const",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 10,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToMessageStartOffsetConfig",
+                                        "value": 0
+                                    }
+                                }
+                            },
+                            {
+                                "name": "Exercise_id",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "none"
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "7fca507c-267d-413a-aa78-3c78256930e0",
+                                        "name": "Ex_id_const",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 255,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": false,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./Protocol_version"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "Pdu Type",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "MessageTypeSemanticsSpec",
+                                    "options": [
+                                        {
+                                            "key": "0",
+                                            "type": "MessageTypeOption",
+                                            "label": "Other"
+                                        },
+                                        {
+                                            "key": "1",
+                                            "type": "MessageTypeOption",
+                                            "label": "Entity State"
+                                        },
+                                        {
+                                            "key": "2",
+                                            "type": "MessageTypeOption",
+                                            "label": "Fire"
+                                        },
+                                        {
+                                            "key": "3",
+                                            "type": "MessageTypeOption",
+                                            "label": "Detonation"
+                                        },
+                                        {
+                                            "key": "12",
+                                            "type": "MessageTypeOption",
+                                            "label": "Remove Entity"
+                                        },
+                                        {
+                                            "key": "13",
+                                            "type": "MessageTypeOption",
+                                            "label": "Start"
+                                        },
+                                        {
+                                            "key": "14",
+                                            "type": "MessageTypeOption",
+                                            "label": "Stop"
+                                        },
+                                        {
+                                            "key": "15",
+                                            "type": "MessageTypeOption",
+                                            "label": "Acknowledge"
+                                        },
+                                        {
+                                            "key": "18",
+                                            "type": "MessageTypeOption",
+                                            "label": "Data Query"
+                                        },
+                                        {
+                                            "key": "20",
+                                            "type": "MessageTypeOption",
+                                            "label": "Data"
+                                        },
+                                        {
+                                            "key": "23",
+                                            "type": "MessageTypeOption",
+                                            "label": "Electromagnetic_emission"
+                                        }
+                                    ]
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                    "type": "RawFieldDecodingSpec"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./Exercise_id"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "Protocol Family",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "none"
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "415f410c-c1e7-4486-a233-e36a61b3ff56",
+                                        "name": "Familty Constraints",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 6,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": false,
+                                    "endianness": "BE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 1,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./Pdu Type"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "timestamp",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "TimeSemanticsSpec",
+                                    "resolution": "milliseconds"
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "04abf98b-4013-40d9-bec8-319579df91e0",
+                                        "name": "Time Const",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 42000000,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": true,
+                                    "endianness": "LE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 4,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./Protocol Family"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "Length",
+                                "type": "FieldSpec",
+                                "hexMode": false,
+                                "semantics": {
+                                    "type": "MessageLengthSemanticsSpec",
+                                    "diffFromMessageSize": 0
+                                },
+                                "constraints": [
+                                    {
+                                        "id": "e0b6988c-56b0-4c70-9c4b-8c7f6a57b37a",
+                                        "name": "MsgLenConst",
+                                        "type": "NumericRangeConstraintSpec",
+                                        "ranges": [
+                                            {
+                                                "max": 2000,
+                                                "min": 0,
+                                                "type": "NumberMinMaxRange"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "fieldDecoding": {
+                                    "type": "NumberFieldDecodingSpec",
+                                    "signed": false,
+                                    "endianness": "BE",
+                                    "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                    "type": "DataExtractionSpec",
+                                    "endOffset": {
+                                        "size": 2,
+                                        "type": "FieldSizeOffsetConfig"
+                                    },
+                                    "startOffset": {
+                                        "type": "RelativeToFieldOffsetConfig",
+                                        "fieldPath": "./timestamp"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 0
+                    }
+                },
+                {
+                    "name": "body",
+                    "type": "SwitchCaseFieldSpec",
+                    "caseOptions": {
+                        "0": {
+                            "name": "Other",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "76d73bc1-0599-4e7e-ae10-3592305b3cbb",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "1": {
+                            "name": "Entity State",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "42525ea9-f981-42d6-9ee2-d0fb818adf97",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": [
+                                    {
+                                        "name": "Entity_id",
+                                        "type": "ObjectFieldSpec",
+                                        "objectSpec": {
+                                            "id": "9c5903f8-753a-4e30-8e55-42b28c0a9e04",
+                                            "name": "Entity_id",
+                                            "type": "ObjectSpec",
+                                            "children": [
+                                                {
+                                                    "name": "Site",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "5134b189-d1fd-4005-82a5-35cf44b61f39",
+                                                            "name": "SameConst ",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 65536,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 2,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToMessageStartOffsetConfig",
+                                                            "value": 0
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "application",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "f3d0dfa7-57dd-4649-8617-de11a52a631e",
+                                                            "name": "SameConst",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 65536,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 2,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Site"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Entity Identifier",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "56ece8c2-676d-45b6-9090-361aecad31d9",
+                                                            "name": "SameConst",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 65536,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 2,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./application"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "description": "The most used Struct in this protocol"
+                                        },
+                                        "startOffset": {
+                                            "type": "RelativeToMessageStartOffsetConfig",
+                                            "value": 0
+                                        }
+                                    },
+                                    {
+                                        "name": "Force Id",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "0e12eaba-dd81-4721-b754-b3ba1e0ea10f",
+                                                "name": "new constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 3,
+                                                        "min": 0,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": false,
+                                            "endianness": "BE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 1,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToMessageStartOffsetConfig",
+                                                "value": 6
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "Entity_type",
+                                        "type": "ObjectFieldSpec",
+                                        "objectSpec": {
+                                            "id": "08e057f9-054f-4ae3-abaf-21d5fbb09ae8",
+                                            "name": "Entity_type",
+                                            "type": "ObjectSpec",
+                                            "children": [
+                                                {
+                                                    "name": "Kind Field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "00fe8528-fed0-49a5-b8e4-9fcd22c33d6f",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 255,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": true,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 1,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToMessageStartOffsetConfig",
+                                                            "value": 0
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Domain Field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "097040ec-8f50-4874-9df7-a42af6c8806a",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 255,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": true,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 1,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Kind Field"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Country field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "1ad47c2b-dc86-4960-a74b-5ebe7b50a2ae",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 65535,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 2,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Domain Field"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Catagory Field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "9cd10cc6-a14d-47ac-8890-f1364d08cb65",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 255,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 1,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Country field"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Subcategory Field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "3e327f1c-b465-4fb5-a113-e9ba330ffb52",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 255,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 1,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Catagory Field"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Specific Field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "d00291ff-6db4-4c09-a6f9-62809bbbb0b1",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 255,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 1,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Subcategory Field"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Extra Field",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "e293204c-1e82-4926-b13a-90deebab08ac",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 255,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 1,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Specific Field"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "description": "the type of the entity"
+                                        },
+                                        "startOffset": {
+                                            "type": "RelativeToFieldOffsetConfig",
+                                            "fieldPath": "./Force Id"
+                                        }
+                                    },
+                                    {
+                                        "name": "Linear Velocity",
+                                        "type": "ObjectFieldSpec",
+                                        "objectSpec": {
+                                            "id": "81ebc1c9-f349-489f-8acf-f756b882d723",
+                                            "name": "Linear Velocity",
+                                            "type": "ObjectSpec",
+                                            "children": [
+                                                {
+                                                    "name": "First Vector Component",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "bf2e9dee-358d-4fb0-8e61-22f9c52eb707",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 5000,
+                                                                    "min": -5000,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": true,
+                                                        "endianness": "BE",
+                                                        "numberType": "float"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 4,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToMessageStartOffsetConfig",
+                                                            "value": 0
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Second Vector Component",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "06431c83-bfd8-43af-9087-d24a329adb87",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 5000,
+                                                                    "min": -5000,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": true,
+                                                        "endianness": "LE",
+                                                        "numberType": "float"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 4,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./First Vector Component"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Third Vector Component",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "6ce5c6c3-d9d4-4831-801a-1ac5f17d52ce",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 5000,
+                                                                    "min": -5000,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": true,
+                                                        "endianness": "LE",
+                                                        "numberType": "float"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 4,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToFieldOffsetConfig",
+                                                            "fieldPath": "./Second Vector Component"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "description": "Linear Velocity Shall Represent velocity in meters per second"
+                                        },
+                                        "startOffset": {
+                                            "type": "RelativeToFieldOffsetConfig",
+                                            "fieldPath": "./Entity_type"
+                                        }
+                                    }
+                                ]
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "2": {
+                            "name": "Fire",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "1d684915-c382-4bfc-88b6-f2a7e4be6c5f",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "3": {
+                            "name": "Detonation",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "5426865b-d2d5-4f4f-9a19-17b8a89dea48",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "12": {
+                            "name": "Remove Entity",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "e9069fc2-8310-4ee3-8b71-cdcc79a57942",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "13": {
+                            "name": "Start",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "42da57bf-11e2-4f7e-ad3c-79fbeaf983d5",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "14": {
+                            "name": "Stop",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "ee579fbb-e7ff-4b5b-b69b-5e5fff2559ab",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "15": {
+                            "name": "Acknowledge",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "44387beb-e40e-457b-88b6-a341005db2b7",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "18": {
+                            "name": "Data Query",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "c94062ed-fb0b-43b4-9590-8c1f52badcf3",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": [
+                                    {
+                                        "name": "prim1",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "22bc5a77-91bd-4ad5-952d-3e8b31e03605",
+                                                "name": "new constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 7.22,
+                                                        "min": 3.14,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": false,
+                                            "endianness": "BE",
+                                            "numberType": "double"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 4,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToMessageStartOffsetConfig",
+                                                "value": 0
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "prim2",
+                                        "type": "FieldSpec",
+                                        "hexMode": false,
+                                        "semantics": {
+                                            "type": "none"
+                                        },
+                                        "constraints": [
+                                            {
+                                                "id": "2c5e5c22-3024-4d37-968b-4fef8f26d311",
+                                                "name": "new constraint",
+                                                "type": "NumericRangeConstraintSpec",
+                                                "ranges": [
+                                                    {
+                                                        "max": 5,
+                                                        "min": 0,
+                                                        "type": "NumberMinMaxRange"
+                                                    },
+                                                    {
+                                                        "max": 10,
+                                                        "min": 7,
+                                                        "type": "NumberMinMaxRange"
+                                                    },
+                                                    {
+                                                        "max": 30,
+                                                        "min": 20,
+                                                        "type": "NumberMinMaxRange"
+                                                    },
+                                                    {
+                                                        "max": 200,
+                                                        "min": 100,
+                                                        "type": "NumberMinMaxRange"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "fieldDecoding": {
+                                            "type": "NumberFieldDecodingSpec",
+                                            "signed": true,
+                                            "endianness": "BE",
+                                            "numberType": "int"
+                                        },
+                                        "dataExtraction": {
+                                            "type": "DataExtractionSpec",
+                                            "endOffset": {
+                                                "size": 2,
+                                                "type": "FieldSizeOffsetConfig"
+                                            },
+                                            "startOffset": {
+                                                "type": "RelativeToFieldOffsetConfig",
+                                                "fieldPath": "./prim1"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "marking",
+                                        "type": "ObjectFieldSpec",
+                                        "objectSpec": {
+                                            "id": "dd3e3afb-0436-4c3f-bbe9-0b3ba765d042",
+                                            "name": "marking",
+                                            "type": "ObjectSpec",
+                                            "children": [
+                                                {
+                                                    "name": "application ",
+                                                    "type": "ObjectFieldSpec",
+                                                    "objectSpec": {
+                                                        "id": "9c5903f8-753a-4e30-8e55-42b28c0a9e04",
+                                                        "name": "Entity_id",
+                                                        "type": "ObjectSpec",
+                                                        "children": [
+                                                            {
+                                                                "name": "Site",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "5134b189-d1fd-4005-82a5-35cf44b61f39",
+                                                                        "name": "SameConst ",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65536,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToMessageStartOffsetConfig",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "application",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "f3d0dfa7-57dd-4649-8617-de11a52a631e",
+                                                                        "name": "SameConst",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65536,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Site"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Entity Identifier",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "56ece8c2-676d-45b6-9090-361aecad31d9",
+                                                                        "name": "SameConst",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65536,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./application"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "The most used Struct in this protocol"
+                                                    },
+                                                    "startOffset": {
+                                                        "type": "RelativeToMessageStartOffsetConfig",
+                                                        "value": 0
+                                                    }
+                                                },
+                                                {
+                                                    "name": "site",
+                                                    "type": "ObjectFieldSpec",
+                                                    "objectSpec": {
+                                                        "id": "9c5903f8-753a-4e30-8e55-42b28c0a9e04",
+                                                        "name": "Entity_id",
+                                                        "type": "ObjectSpec",
+                                                        "children": [
+                                                            {
+                                                                "name": "Site",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "5134b189-d1fd-4005-82a5-35cf44b61f39",
+                                                                        "name": "SameConst ",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65536,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToMessageStartOffsetConfig",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "application",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "f3d0dfa7-57dd-4649-8617-de11a52a631e",
+                                                                        "name": "SameConst",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65536,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Site"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Entity Identifier",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "56ece8c2-676d-45b6-9090-361aecad31d9",
+                                                                        "name": "SameConst",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65536,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./application"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "The most used Struct in this protocol"
+                                                    },
+                                                    "startOffset": {
+                                                        "type": "RelativeToFieldOffsetConfig",
+                                                        "fieldPath": "./application "
+                                                    }
+                                                },
+                                                {
+                                                    "name": "marking_type",
+                                                    "type": "ObjectFieldSpec",
+                                                    "objectSpec": {
+                                                        "id": "08e057f9-054f-4ae3-abaf-21d5fbb09ae8",
+                                                        "name": "Entity_type",
+                                                        "type": "ObjectSpec",
+                                                        "children": [
+                                                            {
+                                                                "name": "Kind Field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "00fe8528-fed0-49a5-b8e4-9fcd22c33d6f",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 255,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToMessageStartOffsetConfig",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Domain Field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "097040ec-8f50-4874-9df7-a42af6c8806a",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 255,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Kind Field"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Country field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "1ad47c2b-dc86-4960-a74b-5ebe7b50a2ae",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 65535,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 2,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Domain Field"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Catagory Field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "9cd10cc6-a14d-47ac-8890-f1364d08cb65",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 255,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Country field"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Subcategory Field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "3e327f1c-b465-4fb5-a113-e9ba330ffb52",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 255,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Catagory Field"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Specific Field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "d00291ff-6db4-4c09-a6f9-62809bbbb0b1",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 255,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Subcategory Field"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Extra Field",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "e293204c-1e82-4926-b13a-90deebab08ac",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 255,
+                                                                                "min": 0,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": false,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "int"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 1,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Specific Field"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "the type of the entity"
+                                                    },
+                                                    "startOffset": {
+                                                        "type": "RelativeToFieldOffsetConfig",
+                                                        "fieldPath": "./site"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "timestamp",
+                                                    "type": "FieldSpec",
+                                                    "hexMode": false,
+                                                    "semantics": {
+                                                        "type": "none"
+                                                    },
+                                                    "constraints": [
+                                                        {
+                                                            "id": "6310b8fc-631d-4557-afbe-c04bdae42397",
+                                                            "name": "new constraint",
+                                                            "type": "NumericRangeConstraintSpec",
+                                                            "ranges": [
+                                                                {
+                                                                    "max": 10000000,
+                                                                    "min": 0,
+                                                                    "type": "NumberMinMaxRange"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "fieldDecoding": {
+                                                        "type": "NumberFieldDecodingSpec",
+                                                        "signed": false,
+                                                        "endianness": "BE",
+                                                        "numberType": "int"
+                                                    },
+                                                    "dataExtraction": {
+                                                        "type": "DataExtractionSpec",
+                                                        "endOffset": {
+                                                            "size": 4,
+                                                            "type": "FieldSizeOffsetConfig"
+                                                        },
+                                                        "startOffset": {
+                                                            "type": "RelativeToMessageStartOffsetConfig",
+                                                            "value": 12
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "marking_velocity",
+                                                    "type": "ObjectFieldSpec",
+                                                    "objectSpec": {
+                                                        "id": "81ebc1c9-f349-489f-8acf-f756b882d723",
+                                                        "name": "Linear Velocity",
+                                                        "type": "ObjectSpec",
+                                                        "children": [
+                                                            {
+                                                                "name": "First Vector Component",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "bf2e9dee-358d-4fb0-8e61-22f9c52eb707",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 5000,
+                                                                                "min": -5000,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "BE",
+                                                                    "numberType": "float"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 4,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToMessageStartOffsetConfig",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Second Vector Component",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "06431c83-bfd8-43af-9087-d24a329adb87",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 5000,
+                                                                                "min": -5000,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "LE",
+                                                                    "numberType": "float"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 4,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./First Vector Component"
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "Third Vector Component",
+                                                                "type": "FieldSpec",
+                                                                "hexMode": false,
+                                                                "semantics": {
+                                                                    "type": "none"
+                                                                },
+                                                                "constraints": [
+                                                                    {
+                                                                        "id": "6ce5c6c3-d9d4-4831-801a-1ac5f17d52ce",
+                                                                        "name": "new constraint",
+                                                                        "type": "NumericRangeConstraintSpec",
+                                                                        "ranges": [
+                                                                            {
+                                                                                "max": 5000,
+                                                                                "min": -5000,
+                                                                                "type": "NumberMinMaxRange"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "fieldDecoding": {
+                                                                    "type": "NumberFieldDecodingSpec",
+                                                                    "signed": true,
+                                                                    "endianness": "LE",
+                                                                    "numberType": "float"
+                                                                },
+                                                                "dataExtraction": {
+                                                                    "type": "DataExtractionSpec",
+                                                                    "endOffset": {
+                                                                        "size": 4,
+                                                                        "type": "FieldSizeOffsetConfig"
+                                                                    },
+                                                                    "startOffset": {
+                                                                        "type": "RelativeToFieldOffsetConfig",
+                                                                        "fieldPath": "./Second Vector Component"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "Linear Velocity Shall Represent velocity in meters per second"
+                                                    },
+                                                    "startOffset": {
+                                                        "type": "RelativeToFieldOffsetConfig",
+                                                        "fieldPath": "./timestamp"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "SuperSub",
+                                                    "type": "ObjectFieldSpec",
+                                                    "objectSpec": {
+                                                        "id": "49736f51-eeff-475c-9470-4c435c24005c",
+                                                        "name": "sub_a",
+                                                        "type": "ObjectSpec",
+                                                        "children": [
+                                                            {
+                                                                "name": "first sub",
+                                                                "type": "ObjectFieldSpec",
+                                                                "objectSpec": {
+                                                                    "id": "76973ed8-d354-4f31-b971-bf6a92750420",
+                                                                    "name": "sub_b",
+                                                                    "type": "ObjectSpec",
+                                                                    "children": [
+                                                                        {
+                                                                            "name": "ofhex",
+                                                                            "type": "FieldSpec",
+                                                                            "hexMode": false,
+                                                                            "semantics": {
+                                                                                "type": "HexConstant",
+                                                                                "value": "a5a5"
+                                                                            },
+                                                                            "constraints": [],
+                                                                            "fieldDecoding": {
+                                                                                "type": "RawFieldDecodingSpec"
+                                                                            },
+                                                                            "dataExtraction": {
+                                                                                "type": "DataExtractionSpec",
+                                                                                "endOffset": {
+                                                                                    "type": "RelativeToMessageStartOffsetConfig",
+                                                                                    "size": 2
+                                                                                },
+                                                                                "startOffset": {
+                                                                                    "type": "RelativeToMessageStartOffsetConfig",
+                                                                                    "value": 0
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "description": "struct to be contained in another struct "
+                                                                },
+                                                                "startOffset": {
+                                                                    "type": "RelativeToMessageStartOffsetConfig",
+                                                                    "value": 0
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "second sub",
+                                                                "type": "ObjectFieldSpec",
+                                                                "objectSpec": {
+                                                                    "id": "76973ed8-d354-4f31-b971-bf6a92750420",
+                                                                    "name": "sub_b",
+                                                                    "type": "ObjectSpec",
+                                                                    "children": [
+                                                                        {
+                                                                            "name": "ofhex",
+                                                                            "type": "FieldSpec",
+                                                                            "hexMode": false,
+                                                                            "semantics": {
+                                                                                "type": "HexConstant",
+                                                                                "value": "a5a5"
+                                                                            },
+                                                                            "constraints": [],
+                                                                            "fieldDecoding": {
+                                                                                "type": "RawFieldDecodingSpec"
+                                                                            },
+                                                                            "dataExtraction": {
+                                                                                "type": "DataExtractionSpec",
+                                                                                "endOffset": {
+                                                                                    "type": "RelativeToMessageStartOffsetConfig",
+                                                                                    "size": 2
+                                                                                },
+                                                                                "startOffset": {
+                                                                                    "type": "RelativeToMessageStartOffsetConfig",
+                                                                                    "value": 0
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "description": "struct to be contained in another struct "
+                                                                },
+                                                                "startOffset": {
+                                                                    "type": "RelativeToFieldOffsetConfig",
+                                                                    "fieldPath": "./first sub"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "struct to contain the sub structure"
+                                                    },
+                                                    "startOffset": {
+                                                        "type": "RelativeToFieldOffsetConfig",
+                                                        "fieldPath": "./marking_velocity"
+                                                    }
+                                                }
+                                            ],
+                                            "description": "doesn't matter"
+                                        },
+                                        "startOffset": {
+                                            "type": "RelativeToFieldOffsetConfig",
+                                            "fieldPath": "./prim2"
+                                        }
+                                    }
+                                ]
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "20": {
+                            "name": "Data",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "ed48adc9-5745-4f5b-b6ee-cd773b49727e",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        },
+                        "23": {
+                            "name": "Electromagnetic_emission",
+                            "type": "ObjectFieldSpec",
+                            "objectSpec": {
+                                "id": "df7386f6-c3b3-47d0-8623-3d9591405ca8",
+                                "name": "Body",
+                                "type": "ObjectSpec",
+                                "children": []
+                            },
+                            "startOffset": {
+                                "type": "RelativeToMessageStartOffsetConfig",
+                                "value": 0
+                            }
+                        }
+                    },
+                    "pathOfFieldToSwitchOn": "/header/Pdu Type"
+                }
+            ]
+        },
+        "version": "1.0"
+    }
+}

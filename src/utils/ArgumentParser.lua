@@ -26,8 +26,9 @@ function ArgumentParser.parse_arguments(...)
         end
         return args[1], args[2]
     else
-        local config = require("config")
-        return config.inputPath, config.outputPath
+        -- local config = require("config")
+        -- return config.inputPath, config.outputPath
+        print_help()
     end
 end
 
