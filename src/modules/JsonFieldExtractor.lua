@@ -24,15 +24,16 @@ local function parse_min_max(constraints)
         utils.json_field_extractor_raise_error("Invalid constraints type. Expected table.", "parse_min_max")
     end
     for _, constraint in ipairs(constraints) do
-        if constraint.type == "NumericRangeConstraintSpec" then
+        if constraint.type == "NumericRangeConstraintSpec" or constraint.type == "HexNumericRangeConstraintSpec" then
             if not constraint.ranges or type(constraint.ranges) ~= "table" then
                 utils.json_field_extractor_raise_error("Invalid range specification in constraints.", "parse_min_max")
             end
+            -- TODO: loop through all of the ranges and add in the format {{min=,max=},{min=,max=}}
             local range = constraint.ranges[1]
             if range.min == nil or range.max == nil then
                 utils.json_field_extractor_raise_error("Range must contain both min and max values.", "parse_min_max")
             end
-            return { min = range.min, max = range.max }
+            return constraint.type == "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
         end
     end
     return nil
@@ -51,6 +52,7 @@ local function parse_data_type(field_table)
 
     local decoding = field_table.fieldDecoding
     
+    -- float or double
     if decoding.numberType and decoding.numberType ~= "int" then
         return decoding.numberType
     end
@@ -62,6 +64,11 @@ local function parse_data_type(field_table)
 
     local is_signed = decoding.signed
     local base_type = is_signed and "int" or "uint"
+
+    if decoding.type == "RawFieldDecodingSpec" or decoding.type == "HexRawFieldDecodingSpec" then
+        base_type = "uint" -- We treat raw fields as unsigned integer, raw field must have size
+    end
+
     local data_type = base_type .. (field_size * 8) .. "_t"
     -- TODO: check this
     if not (data_type:match("_t$") or data_type == "float" or data_type == "double" or data_type == "int") then
@@ -153,8 +160,8 @@ function extract_json_field(field_table)
                 field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
             elseif field_table.semantics.type == 'none' or field_table.semantics.type == 'MessageLengthSemanticsSpec' then
                 -- TODO: Implement this edge-case 
-            elseif field_table.semantics.type == 'TimeSemanticsSpec' then
-                
+            elseif field_table.semantics.type == 'TimeSemanticsSpec' or field_table.semantics.type == "ChecksumSemanticsSpec" or field_table.semantics.type == "ChangingMonotonicitySemanticsSpec" then
+                -- TODO: decide what to do
             elseif field_table.semantics.type == 'gap' then
                 --[[
                     Check two things: 
@@ -172,7 +179,7 @@ function extract_json_field(field_table)
         end
         if not field.gap_notice then
             field.data_type = parse_data_type(field_table)
-            field.valid_value = parse_min_max(field_table.constraints)    
+            field.valid_value = parse_min_max(field_table.constraints)
         end
         
     end
