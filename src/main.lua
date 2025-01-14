@@ -21,6 +21,6 @@ local function create_filter(inputPath, outputPath)
     print("Conversion complete. Output written to " .. outputPath)
 end
 
-local inputFilePath, outputFilePath = ArgumentParser.parse_arguments()
+local inputFilePath, outputFilePath = ArgumentParser.parse_arguments(...)
 
 create_filter(inputFilePath, outputFilePath)
