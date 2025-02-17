@@ -51,4 +51,11 @@ function Utils.struct_exists(struct_def, struct_name)
     return false
 end
 
+function Utils.mergeTables(to, from)
+    for k, v in pairs(from) do
+        to[k] = v
+    end
+    return to
+end
+
 return Utils
