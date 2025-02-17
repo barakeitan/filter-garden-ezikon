@@ -125,6 +125,19 @@ function field_table_to_string(tbl, indent)
             entry = entry .. ", type_id = " .. tostring(field.type_id)
         end
 
+        if field.delimiter then
+            entry = entry .. ", delimiter = " .. tostring(field.delimiter)
+        end
+        if field.escape then
+            entry = entry .. ", escape = " .. tostring(field.escape)
+        end
+        if field.charset then
+            entry = entry .. ", charset = " .. tostring(field.charset)
+        end
+        if field.optional then
+            entry = entry .. ", optional = { type = " .. field.optional.type .. ', depend = "' .. tostring(field.optional.depend) .. '" }'
+        end
+
         -- Check for gap properties and format accordingly
     
         if field.gap_notice then

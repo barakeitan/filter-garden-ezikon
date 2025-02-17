@@ -33,10 +33,22 @@ local function parse_min_max(constraints)
             if range.min == nil or range.max == nil then
                 utils.json_field_extractor_raise_error("Range must contain both min and max values.", "parse_min_max")
             end
-            return constraint.type == "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
+            return constraint.type ~= "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
         end
     end
     return nil
+end
+
+local function parse_field_size(data_extraction)
+    local field_size = 0
+    if data_extraction and data_extraction.endOffset.type == "FieldSizeOffsetConfig" then -- usually comes with a RelativeToFieldOffsetConfig in the start config
+        field_size = data_extraction.endOffset and data_extraction.endOffset.size
+    elseif data_extraction and data_extraction.startOffset.type == data_extraction.endOffset.type == "RelativeToMessageStartOffsetConfig" then
+        field_size = data_extraction.endOffset.value - data_extraction.startOffset.value + 1
+    elseif data_extraction and data_extraction.startOffset.type == data_extraction.endOffset.type == "RelativeToMessageEndOffsetConfig" then
+        field_size = data_extraction.endOffset.value - data_extraction.startOffset.value + 1
+    end
+    return field_size
 end
 
 --- Determines the data type of a field based on decoding information.
@@ -48,6 +60,7 @@ local function parse_data_type(field_table)
         utils.json_field_extractor_raise_error("Invalid field_table provided.", "parse_data_type")
     end
     
+    -- Check if the table is a struct and return the struct name
     if field_table.type == "ObjectFieldSpec" then return field_table.name end
 
     local decoding = field_table.fieldDecoding
@@ -56,8 +69,7 @@ local function parse_data_type(field_table)
     if decoding.numberType and decoding.numberType ~= "int" then
         return decoding.numberType
     end
-    
-    local field_size = field_table.dataExtraction and field_table.dataExtraction.endOffset and field_table.dataExtraction.endOffset.size
+    local field_size = parse_field_size(field_table.dataExtraction)
     if not field_size then
         utils.json_field_extractor_raise_error("Field size information is missing or invalid.", "parse_data_type")
     end
@@ -126,10 +138,39 @@ function extract_json_struct(object_table)
         table.insert(json_icd.structs_def, struct_name)
         json_icd.structs[struct_name] = {}
         for _, child_field in ipairs(object_table.children) do
-            table.insert(json_icd.structs[struct_name], extract_json_field(child_field))
+            table.insert(json_icd.structs[struct_name], extract_json_field(struct_name, child_field))
         end
     end
     return struct_name
+end
+
+local function extract_array_field(field_table)
+    local field = {}
+    local decoding = field_table.fieldDecoding
+    if decoding.numberType and decoding.numberType ~= "int" then
+        return decoding.numberType
+    end
+    local is_signed = decoding.signed
+    local base_type = is_signed and "int" or "uint"
+    local field_size = field_table.dataExtraction.endOffset.itemSize
+
+    if decoding.type == "RawFieldDecodingSpec" or decoding.type == "HexRawFieldDecodingSpec" then
+        base_type = "uint" -- We treat raw fields as unsigned integer, raw field must have size
+    end
+    field.valid_value = parse_min_max(field_table.constraints)
+    field.data_type = base_type .. (field_size * 8) .. "_t"
+    field.optional = {type= "optional_type.ARRAY", depend=field_table.dataExtraction.endOffset.arraySizeFieldPath}
+    return field
+end
+
+
+local function extract_string_field(field_table)
+    local field = {}
+    field.data_type = "string"
+    field.delimiter = '"'..field_table.dataExtraction.endOffset.delimiter..'"'
+    field.escape = '"'..field_table.fieldDecoding.escape..'"'
+    field.charset = '"'..field_table.fieldDecoding.charset..'"'
+    return field
 end
 
 --- Extracts and organizes information from a field table.
@@ -144,10 +185,16 @@ function extract_json_field(field_table)
     local field = {
         name = field_table.name,
     }
-
+    -- Check if this is a struct 
     if field_table.type == "ObjectFieldSpec" then
         extract_json_struct(field_table.objectSpec)
         field.data_type = field_table.objectSpec.name .. "_t"
+    -- Check if this is an array
+    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" then 
+        field = utils.mergeTables(field, extract_array_field(field_table))
+    -- Check that the field is a string
+    elseif field_table.fieldDecoding.type == "StringFieldDecodingSpec" or field_table.fieldDecoding.type == "HexStringFieldDecodingSpec" then
+       field = utils.mergeTables(field, extract_string_field(field_table))
     else
         if field_table.semantics then
             if field_table.semantics.type == "MessageTypeSemanticsSpec" then
@@ -174,16 +221,15 @@ function extract_json_field(field_table)
                     field.gap_notice = true
                 end
             else
-                utils.json_field_extractor_raise_error("Unsupported semantics type: " .. field_table.semantics.type, "extract_json_field")
+                --utils.json_field_extractor_raise_error("Unsupported semantics type: " .. field_table.semantics.type, "extract_json_field")
+                print("unknown semantic type")
+            end
+            if not field.gap_notice then
+                field.data_type = parse_data_type(field_table)
+                field.valid_value = parse_min_max(field_table.constraints)
             end
         end
-        if not field.gap_notice then
-            field.data_type = parse_data_type(field_table)
-            field.valid_value = parse_min_max(field_table.constraints)
-        end
-        
     end
-
     return field
 end
 
@@ -240,7 +286,9 @@ local function extract_json_body(json_table)
             table.insert(message.fields, extract_json_field(child_field))
         end
 
-        extracted_messages[message_key] = message
+        if message_key ~= nil then
+            extracted_messages[message_key] = message
+        end
     end
 
     return extracted_messages
