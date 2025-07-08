@@ -38,6 +38,8 @@ local function parse_valid_values(constraints)
                 valid_values = { min = range.min, max = range.max }
             elseif range.type == "LowerThan" or range.type == "GreaterThan" then
                 valid_values = range.type == "LowerThan" and {min = range.value} or {max = range.value}
+            elseif range.type == "EqualTo" then
+                valid_values = { Exact = range.value }
             end
             return valid_values
            -- return constraint.type ~= "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
@@ -122,17 +124,6 @@ local function parse_message_enumeration(semantics)
         table.insert(keys, key)
     end
     return keys
-end
-
---- Parses exact values specified in semantics (for single-value constant).
---- @param semantics table A table containing the semantics options.
---- @return table table containing the exact value(s).
---- @raise Raises an error if the semantics table is invalid or missing required fields.
-local function parse_exacts_values(semantics)
-    if type(semantics) ~= "table" or not semantics.value then
-        utils.json_field_extractor_raise_error("Invalid semantics for exact values. Expected table with a value.", "parse_exacts_values")
-    end
-    return {semantics.value}
 end
 
 --- Extracts the structure definition from the JSON table.
@@ -221,15 +212,8 @@ function extract_json_field(field_table)
             if field_table.semantics.type == "MessageTypeSemanticsSpec" then
                 field.type_id = true
                 field.valid_value = { enum = parse_message_enumeration(field_table.semantics) }
-            elseif field_table.semantics.type == "NumberConstant" then
-                field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
-            elseif field_table.semantics.type == "HexConstant" then
-                field_table.semantics.value = utils.hex_string_to_integer(field_table.semantics.value)
-                field.valid_value = { exact = parse_exacts_values(field_table.semantics) }
             elseif field_table.semantics.type == 'none' or field_table.semantics.type == 'MessageLengthSemanticsSpec' then
                 -- TODO: Implement this edge-case 
-            elseif field_table.semantics.type == 'TimeSemanticsSpec' or field_table.semantics.type == "ChecksumSemanticsSpec" or field_table.semantics.type == "ChangingMonotonicitySemanticsSpec" then
-                -- TODO: decide what to do
             elseif field_table.semantics.type == 'gap' then
                 --[[
                     Check two things: 
