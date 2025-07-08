@@ -19,21 +19,28 @@ local json_icd = {}
 --- @param constraints table A table containing field constraints.
 --- @return table table with min and max values, or `nil` if not found.
 --- @raise Raises an error if the constraints table is invalid or missing required information.
-local function parse_min_max(constraints)
+local function parse_valid_values(constraints)
     if type(constraints) ~= "table" then
         utils.json_field_extractor_raise_error("Invalid constraints type. Expected table.", "parse_min_max")
     end
     for _, constraint in ipairs(constraints) do
-        if constraint.type == "NumericRangeConstraintSpec" or constraint.type == "HexNumericRangeConstraintSpec" then
+        if constraint.type == "NumericRangeConstraintSpec" then
             if not constraint.ranges or type(constraint.ranges) ~= "table" then
                 utils.json_field_extractor_raise_error("Invalid range specification in constraints.", "parse_min_max")
             end
             -- TODO: loop through all of the ranges and add in the format {{min=,max=},{min=,max=}}
             local range = constraint.ranges[1]
-            if range.min == nil or range.max == nil then
-                utils.json_field_extractor_raise_error("Range must contain both min and max values.", "parse_min_max")
+            local min, max, valid_values
+            if range.type == "Between" then
+                if range.min == nil or range.max == nil then
+                    utils.json_field_extractor_raise_error("Range must contain both min and max values.", "parse_min_max")
+                end
+                valid_values = { min = range.min, max = range.max }
+            elseif range.type == "LowerThan" or range.type == "GreaterThan" then
+                valid_values = range.type == "LowerThan" and {min = range.value} or {max = range.value}
             end
-            return constraint.type ~= "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
+            return valid_values
+           -- return constraint.type ~= "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
         end
     end
     return nil
@@ -157,7 +164,7 @@ local function extract_array_field(field_table)
     if decoding.type == "RawFieldDecodingSpec" or decoding.type == "HexRawFieldDecodingSpec" then
         base_type = "uint" -- We treat raw fields as unsigned integer, raw field must have size
     end
-    field.valid_value = parse_min_max(field_table.constraints)
+    field.valid_value = parse_valid_values(field_table.constraints)
     field.data_type = base_type .. (field_size * 8) .. "_t"
     if field_table.dataExtraction.endOffset.type == "StaticArrayOffsetConfig" then
         field.static_array_size = field_table.dataExtraction.endOffset.arraySize
@@ -240,7 +247,7 @@ function extract_json_field(field_table)
             end
             if not field.gap_notice then
                 field.data_type = parse_data_type(field_table)
-                field.valid_value = parse_min_max(field_table.constraints)
+                field.valid_value = parse_valid_values(field_table.constraints)
             end
         end
     end
