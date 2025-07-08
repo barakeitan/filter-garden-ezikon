@@ -138,7 +138,7 @@ function extract_json_struct(object_table)
         table.insert(json_icd.structs_def, struct_name)
         json_icd.structs[struct_name] = {}
         for _, child_field in ipairs(object_table.children) do
-            table.insert(json_icd.structs[struct_name], extract_json_field(struct_name, child_field))
+            table.insert(json_icd.structs[struct_name], extract_json_field(child_field))
         end
     end
     return struct_name
@@ -159,7 +159,11 @@ local function extract_array_field(field_table)
     end
     field.valid_value = parse_min_max(field_table.constraints)
     field.data_type = base_type .. (field_size * 8) .. "_t"
-    field.optional = {type= "optional_type.ARRAY", depend=field_table.dataExtraction.endOffset.arraySizeFieldPath}
+    if field_table.dataExtraction.endOffset.type == "StaticArrayOffsetConfig" then
+        field.static_array_size = field_table.dataExtraction.endOffset.arraySize
+    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" then
+        field.optional = {type= "optional_type.ARRAY", depend=field_table.dataExtraction.endOffset.arraySizeFieldPath}
+    end
     return field
 end
 
@@ -167,9 +171,19 @@ end
 local function extract_string_field(field_table)
     local field = {}
     field.data_type = "string"
-    field.delimiter = '"'..field_table.dataExtraction.endOffset.delimiter..'"'
-    field.escape = '"'..field_table.fieldDecoding.escape..'"'
-    field.charset = '"'..field_table.fieldDecoding.charset..'"'
+    if field_table.dataExtraction.endOffset.delimiter ~= nil then
+        field.delimiter = '"'..field_table.dataExtraction.endOffset.delimiter..'"'
+    end
+    if field_table.fieldDecoding.escape ~= nil then
+        if field_table.fieldDecoding.escape == '\\' then
+            field.escape = '"'.."\\\\"..'"'
+        else
+            field.escape = '"'..field_table.fieldDecoding.escape..'"'
+        end
+    end
+    if field_table.fieldDecoding.charset ~= nil then
+        field.charset = '"'..field_table.fieldDecoding.charset..'"'
+    end
     return field
 end
 
@@ -190,7 +204,7 @@ function extract_json_field(field_table)
         extract_json_struct(field_table.objectSpec)
         field.data_type = field_table.objectSpec.name .. "_t"
     -- Check if this is an array
-    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" then 
+    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" or field_table.dataExtraction.endOffset.type == "staticArrayOffsetConfig" then 
         field = utils.mergeTables(field, extract_array_field(field_table))
     -- Check that the field is a string
     elseif field_table.fieldDecoding.type == "StringFieldDecodingSpec" or field_table.fieldDecoding.type == "HexStringFieldDecodingSpec" then

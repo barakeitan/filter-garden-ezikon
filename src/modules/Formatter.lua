@@ -137,7 +137,9 @@ function field_table_to_string(tbl, indent)
         if field.optional then
             entry = entry .. ", optional = { type = " .. field.optional.type .. ', depend = "' .. tostring(field.optional.depend) .. '" }'
         end
-
+        if field.static_array_size then
+            entry = entry .. "static_array_size = " .. tostring(field.static_array_size)
+        end
         -- Check for gap properties and format accordingly
     
         if field.gap_notice then

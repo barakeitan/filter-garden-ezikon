@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/src/main.lua",
-            "arg": ["./data/partial_dis_for_iaf.json", "./output/test.lua"]
+            "arg": ["./data/Barak_schema.json", "./output/Barak_GC.lua"]
         }
     ]
 }
