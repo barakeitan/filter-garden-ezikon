@@ -1,0 +1,1614 @@
+{
+  "id": "dc36af9c-e51d-413b-8c8e-a6c20c8a2103",
+  "name": "Demo Ground Control Protocol",
+  "description": "ground_control",
+  "creator": "Ofer",
+  "lastModifiedTimestamp": 1749400296878,
+  "createdTimestamp": 1749400296878,
+  "options": {
+    "type": "binary",
+    "hexMode": false
+  },
+  "messageSpec": {
+    "spec": {
+      "id": "123",
+      "name": "MessageSpec",
+      "type": "ObjectSpec",
+      "children": [
+        {
+          "id": "7fd85e30-c97a-465c-956a-3a10ca9b3009",
+          "name": "header",
+          "type": "ObjectFieldSpec",
+          "semantics": {
+            "type": "none"
+          },
+          "objectSpec": {
+            "id": "123",
+            "name": "Header",
+            "type": "ObjectSpec",
+            "children": [
+              {
+                "id": "57f7d3dd-db26-4e97-a6ab-1fc34889804c",
+                "name": "prefix",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "none"
+                },
+                "constraints": [],
+                "fieldDecoding": {
+                  "type": "RawFieldDecodingSpec"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 2,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToMessageStartOffsetConfig",
+                    "value": 0
+                  }
+                }
+              },
+              {
+                "id": "7c407253-01ec-4feb-8093-aafb146bcec3",
+                "name": "source_device",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "message-source"
+                },
+                "constraints": [],
+                "fieldDecoding": {
+                  "type": "RawFieldDecodingSpec"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 2,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToMessageStartOffsetConfig",
+                    "value": 2
+                  }
+                }
+              },
+              {
+                "id": "52a8771c-8697-4762-b947-3baf5cc3a159",
+                "name": "destination_device",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "message-destination"
+                },
+                "constraints": [],
+                "fieldDecoding": {
+                  "type": "RawFieldDecodingSpec"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 2,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToMessageStartOffsetConfig",
+                    "value": 4
+                  }
+                }
+              },
+              {
+                "id": "cb30969f-8ba5-4773-9737-6a4cda53c752",
+                "name": "message_type",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "MessageTypeSemanticsSpec",
+                  "options": [
+                    {
+                      "key": "10",
+                      "type": "MessageTypeOption",
+                      "label": "location report"
+                    },
+                    {
+                      "key": "12",
+                      "type": "MessageTypeOption",
+                      "label": "engines status report "
+                    },
+                    {
+                      "key": "20",
+                      "type": "MessageTypeOption",
+                      "label": "AllReports Request"
+                    },
+                    {
+                      "key": "21",
+                      "type": "MessageTypeOption",
+                      "label": "AllReport Reply"
+                    },
+                    {
+                      "key": "11",
+                      "type": "MessageTypeOption",
+                      "label": "Targets report"
+                    }
+                  ]
+                },
+                "constraints": [],
+                "fieldDecoding": {
+                  "type": "RawFieldDecodingSpec"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 1,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToMessageStartOffsetConfig",
+                    "value": 6
+                  }
+                }
+              },
+              {
+                "id": "f8609709-dba3-482c-8ff0-1e1f0f20a56b",
+                "name": "body_length_in_bytes",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "MessageLengthSemanticsSpec",
+                  "options": [
+                    {
+                      "key": "10",
+                      "type": "MessageLengthOption",
+                      "label": "location report",
+                      "ranges": [
+                        {
+                          "type": "Between",
+                          "value": {
+                            "max": 1000,
+                            "min": 1,
+                            "type": "NumberMinMaxRange"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "key": "12",
+                      "type": "MessageLengthOption",
+                      "label": "engines status report ",
+                      "ranges": [
+                        {
+                          "type": "Between",
+                          "value": {
+                            "max": 1000,
+                            "min": 1,
+                            "type": "NumberMinMaxRange"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "key": "20",
+                      "type": "MessageLengthOption",
+                      "label": "AllReports Request",
+                      "ranges": [
+                        {
+                          "type": "Between",
+                          "value": {
+                            "max": 1000,
+                            "min": 1,
+                            "type": "NumberMinMaxRange"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "key": "21",
+                      "type": "MessageLengthOption",
+                      "label": "AllReport Reply",
+                      "ranges": [
+                        {
+                          "type": "Between",
+                          "value": {
+                            "max": 1000,
+                            "min": 1,
+                            "type": "NumberMinMaxRange"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "key": "11",
+                      "type": "MessageLengthOption",
+                      "label": "Targets report",
+                      "ranges": [
+                        {
+                          "type": "Between",
+                          "value": {
+                            "max": 1000,
+                            "min": 1,
+                            "type": "NumberMinMaxRange"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "includeHeaderSize": false
+                },
+                "constraints": [],
+                "fieldDecoding": {
+                  "type": "NumberFieldDecodingSpec",
+                  "signed": false,
+                  "endianness": "LE",
+                  "numberType": "int"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 2,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToMessageStartOffsetConfig",
+                    "value": 7
+                  }
+                }
+              },
+              {
+                "id": "ba7a0c02-0951-485c-adfc-ec948dae49ca",
+                "name": "sequential_number",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "ChangingMonotonicitySemanticsSpec",
+                  "monotonicityType": "increasing"
+                },
+                "constraints": [
+                  {
+                    "id": "4d4f06c7-ff36-4b1d-b7dd-fb3fd5d7fec1",
+                    "name": "new constraint",
+                    "type": "NumericRangeConstraintSpec",
+                    "ranges": [
+                      {
+                        "type": "Between",
+                        "value": {
+                          "max": 2147483647,
+                          "min": 0,
+                          "type": "NumberMinMaxRange"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "fieldDecoding": {
+                  "type": "NumberFieldDecodingSpec",
+                  "signed": false,
+                  "endianness": "LE",
+                  "numberType": "int"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 2,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToMessageStartOffsetConfig",
+                    "value": 9
+                  }
+                }
+              },
+              {
+                "id": "a5d0f54d-2b2f-456b-bcae-c8d8b047deda",
+                "name": "checksum",
+                "type": "FieldSpec",
+                "hexMode": false,
+                "semantics": {
+                  "type": "ChecksumSemanticsSpec"
+                },
+                "constraints": [],
+                "fieldDecoding": {
+                  "type": "RawFieldDecodingSpec"
+                },
+                "dataExtraction": {
+                  "type": "DataExtractionSpec",
+                  "endOffset": {
+                    "size": 4,
+                    "type": "FieldSizeOffsetConfig"
+                  },
+                  "startOffset": {
+                    "type": "RelativeToFieldOffsetConfig",
+                    "fieldPath": "./sequential_number"
+                  }
+                }
+              }
+            ]
+          },
+          "startOffset": {
+            "type": "RelativeToMessageStartOffsetConfig",
+            "value": 0
+          }
+        },
+        {
+          "id": "0338b447-809e-4bdc-99ac-9f25964d36a9",
+          "name": "body",
+          "type": "SwitchCaseFieldSpec",
+          "caseOptions": {
+            "10": {
+              "id": "61bd0140-ba21-491e-b072-e04ee3252bea",
+              "name": "10",
+              "type": "ObjectFieldSpec",
+              "semantics": {
+                "type": "none"
+              },
+              "objectSpec": {
+                "id": "10",
+                "name": "10",
+                "type": "ObjectSpec",
+                "children": [
+                  {
+                    "id": "ff4e04b6-f8f6-4b57-8ad2-04430cb491e0",
+                    "name": "current_time",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "ChangingMonotonicitySemanticsSpec",
+                      "monotonicityType": "increasing"
+                    },
+                    "constraints": [
+                      {
+                        "id": "0871257e-e443-4258-94e0-9037a20661ea",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 9223372036854776000,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 8,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 0
+                      }
+                    }
+                  },
+                  {
+                    "id": "21a4d98d-c761-4786-9d0f-7493ba102a38",
+                    "name": "altitude",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "57f5851c-e967-492b-b2e5-3e0f83a78737",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": true,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 4,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 8
+                      }
+                    }
+                  },
+                  {
+                    "id": "9a04b82f-e920-4f32-af03-2d8b17b5969c",
+                    "name": "latitude",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "47370b99-d356-4793-900f-4bf4e8556dd8",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": true,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 4,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 12
+                      }
+                    }
+                  },
+                  {
+                    "id": "8ed43ec8-54df-4412-8770-bce385862fdf",
+                    "name": "longitude",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "3497fea2-936b-4ae2-9373-b23d20385ffa",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": true,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 4,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 16
+                      }
+                    }
+                  },
+                  {
+                    "id": "825a85fe-bc42-4493-899f-df1ab9324648",
+                    "name": "speed",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "474ed4ea-f725-409c-9204-db5d6ae4f1fb",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 2,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 20
+                      }
+                    }
+                  },
+                  {
+                    "id": "d8c5bc55-1aaa-443d-9bb0-90cfab5a0c92",
+                    "name": "bearing",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "f308ead1-7206-4f48-95ef-794e018b2996",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 2,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 22
+                      }
+                    }
+                  }
+                ]
+              },
+              "startOffset": {
+                "type": "RelativeToFieldOffsetConfig",
+                "fieldPath": "./header"
+              }
+            },
+            "11": {
+              "id": "a3eb9538-def8-4072-89fe-164510c27218",
+              "name": "11",
+              "type": "ObjectFieldSpec",
+              "semantics": {
+                "type": "none"
+              },
+              "objectSpec": {
+                "id": "11",
+                "name": "11",
+                "type": "ObjectSpec",
+                "children": [
+                  {
+                    "id": "e7b7470c-56fa-43f5-99c0-cebedf4e421e",
+                    "name": "number_of_targets_array_size",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "790ded2c-5653-422f-a3be-13a229382586",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 1,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 0
+                      }
+                    }
+                  },
+                  {
+                    "id": "b7815886-8316-4609-9828-24fe076fe084",
+                    "name": "number_of_targets",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "2fe0261a-2054-4827-bfe8-db27e5a5e29f",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 9223372036854776000,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": true,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "type": "DynamicArrayOffsetConfig",
+                        "itemSize": 8,
+                        "arraySizeFieldPath": "./number_of_targets_array_size"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              "startOffset": {
+                "type": "RelativeToFieldOffsetConfig",
+                "fieldPath": "./header"
+              }
+            },
+            "12": {
+              "id": "0d236c10-3fdb-43b9-9658-ca3f372bb254",
+              "name": "12",
+              "type": "ObjectFieldSpec",
+              "semantics": {
+                "type": "none"
+              },
+              "objectSpec": {
+                "id": "12",
+                "name": "12",
+                "type": "ObjectSpec",
+                "children": [
+                  {
+                    "id": "db13a426-d04c-4e91-8428-9a5756d72091",
+                    "name": "right_engine_temperature",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "fdcb356e-8557-499c-b201-eefe44fa1f9f",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": true,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 4,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 0
+                      }
+                    }
+                  },
+                  {
+                    "id": "2d5fc2a8-f3e4-4411-8a7b-baa02f0c5827",
+                    "name": "left_engine_temperature",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "31d1b4ae-b1a5-4eec-b37d-ba647998fd7f",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": true,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 4,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 4
+                      }
+                    }
+                  },
+                  {
+                    "id": "08378e2b-04c3-497a-bcb6-f3457709b1d5",
+                    "name": "right_engine_RPM",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "ac86b42b-08a9-41a8-ace6-cf7f7ac0500e",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 2,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 8
+                      }
+                    }
+                  },
+                  {
+                    "id": "f89e930c-ea25-4221-bc41-e9b3eb5d4fd2",
+                    "name": "left_engine_RPM",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "44882276-51d2-483d-a877-32ca6f0cf9b5",
+                        "name": "new constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 2147483647,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 2,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 10
+                      }
+                    }
+                  }
+                ]
+              },
+              "startOffset": {
+                "type": "RelativeToFieldOffsetConfig",
+                "fieldPath": "./header"
+              }
+            },
+            "20": {
+              "id": "0be9589c-30d9-4465-bb2b-bb82226a747a",
+              "name": "20",
+              "type": "ObjectFieldSpec",
+              "semantics": {
+                "type": "none"
+              },
+              "objectSpec": {
+                "id": "20",
+                "name": "20",
+                "type": "ObjectSpec",
+                "children": [
+                  {
+                    "id": "61940c30-7d78-4d64-b6ab-f44e7818a538",
+                    "name": "array_of_struct",
+                    "type": "ArrayFieldSpec",
+                    "arraySize": {
+                      "type": "StaticArraySize",
+                      "arraySize": 10
+                    },
+                    "fieldItem": {
+                      "id": "39ccb810-e62d-40b5-8aa6-fed1f5ce60f6",
+                      "name": "bits_struct",
+                      "type": "ObjectSpec",
+                      "children": [
+                        {
+                          "id": "879245d8-9a2d-4fd5-8886-925d7fd80318",
+                          "name": "bit_one",
+                          "type": "BitObjectFieldSpec",
+                          "objectSpec": {
+                            "id": "91e73963-807a-4460-89e9-132052e04704",
+                            "name": "light_bit",
+                            "type": "BitObjectSpec",
+                            "children": [
+                              {
+                                "id": "3f92640d-976c-469b-a4cb-f40004cf9b0a",
+                                "name": "first",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 2,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToMessageStartOffsetConfig",
+                                    "value": 0
+                                  }
+                                }
+                              },
+                              {
+                                "id": "f4b45573-5f54-4ba6-9ff6-0d8ca7be3dd0",
+                                "name": "second",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 4,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToFieldOffsetConfig",
+                                    "fieldPath": "./first"
+                                  }
+                                }
+                              },
+                              {
+                                "id": "6b90fa0b-e41c-4c1f-ba40-00f13b43e082",
+                                "name": "rest",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 2,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToFieldOffsetConfig",
+                                    "fieldPath": "./second"
+                                  }
+                                }
+                              }
+                            ],
+                            "semantics": {
+                              "type": "none"
+                            },
+                            "constraints": [],
+                            "fieldDecoding": {
+                              "type": "NumberFieldDecodingSpec",
+                              "signed": false,
+                              "endianness": "LE",
+                              "numberType": "int"
+                            }
+                          },
+                          "startOffset": {
+                            "type": "RelativeToMessageStartOffsetConfig",
+                            "value": 0
+                          }
+                        },
+                        {
+                          "id": "f9e327d6-3ebc-4635-9faa-388e3971ea9c",
+                          "name": "just_size",
+                          "type": "FieldSpec",
+                          "hexMode": false,
+                          "semantics": {
+                            "type": "none"
+                          },
+                          "constraints": [
+                            {
+                              "id": "123",
+                              "name": "Numeric Range Constraint",
+                              "type": "NumericRangeConstraintSpec",
+                              "ranges": [
+                                {
+                                  "type": "Between",
+                                  "value": {
+                                    "max": 15,
+                                    "min": 10,
+                                    "type": "NumberMinMaxRange"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "fieldDecoding": {
+                            "type": "NumberFieldDecodingSpec",
+                            "signed": false,
+                            "endianness": "LE",
+                            "numberType": "int"
+                          },
+                          "dataExtraction": {
+                            "type": "DataExtractionSpec",
+                            "endOffset": {
+                              "size": 2,
+                              "type": "FieldSizeOffsetConfig"
+                            },
+                            "startOffset": {
+                              "type": "RelativeToFieldOffsetConfig",
+                              "fieldPath": "./bit_one"
+                            }
+                          }
+                        },
+                        {
+                          "id": "784d9459-7be9-46bd-9e1b-f37bd4962103",
+                          "name": "big_bits",
+                          "type": "BitObjectFieldSpec",
+                          "objectSpec": {
+                            "id": "ed9b3088-0d34-483b-94a7-21381cdd0b82",
+                            "name": "big_bit_field",
+                            "type": "BitObjectSpec",
+                            "children": [
+                              {
+                                "id": "035771e5-5039-4c1d-9e6b-492a8cbde981",
+                                "name": "field5",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 5,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToMessageStartOffsetConfig",
+                                    "value": 0
+                                  }
+                                }
+                              },
+                              {
+                                "id": "2eebeb5d-76ab-41a5-ba22-85ea393e2d42",
+                                "name": "field4",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 4,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToFieldOffsetConfig",
+                                    "fieldPath": "./field5"
+                                  }
+                                }
+                              },
+                              {
+                                "id": "f7b70bf9-e25a-42ec-87af-699cb80ca092",
+                                "name": "field3",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 3,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToFieldOffsetConfig",
+                                    "fieldPath": "./field4"
+                                  }
+                                }
+                              },
+                              {
+                                "id": "770b121c-4766-4af0-ad9d-7b3dc61a889c",
+                                "name": "field4s",
+                                "type": "BitFieldSpec",
+                                "semantics": {
+                                  "type": "none"
+                                },
+                                "constraints": [],
+                                "fieldDecoding": {
+                                  "type": "NumberFieldDecodingSpec",
+                                  "signed": false,
+                                  "endianness": "LE",
+                                  "numberType": "int"
+                                },
+                                "dataExtraction": {
+                                  "type": "DataExtractionSpec",
+                                  "endOffset": {
+                                    "size": 4,
+                                    "type": "FieldSizeOffsetConfig"
+                                  },
+                                  "startOffset": {
+                                    "type": "RelativeToFieldOffsetConfig",
+                                    "fieldPath": "./field3"
+                                  }
+                                }
+                              }
+                            ],
+                            "semantics": {
+                              "type": "none"
+                            },
+                            "constraints": [],
+                            "fieldDecoding": {
+                              "type": "NumberFieldDecodingSpec",
+                              "signed": false,
+                              "endianness": "LE",
+                              "numberType": "int"
+                            }
+                          },
+                          "startOffset": {
+                            "type": "RelativeToFieldOffsetConfig",
+                            "fieldPath": "./just_size"
+                          }
+                        }
+                      ],
+                      "description": ""
+                    },
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "startOffset": {
+                      "type": "RelativeToMessageStartOffsetConfig",
+                      "value": 0
+                    }
+                  },
+                  {
+                    "id": "4bc7c1f6-214a-48d0-a25b-f1efd18b82f4",
+                    "name": "size_of_elements",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "123",
+                        "name": "Numeric Range Constraint",
+                        "type": "NumericRangeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 5555,
+                              "min": 0,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "NumberFieldDecodingSpec",
+                      "signed": false,
+                      "endianness": "LE",
+                      "numberType": "int"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "size": 1,
+                        "type": "FieldSizeOffsetConfig"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToFieldOffsetConfig",
+                        "fieldPath": "./array_of_struct"
+                      }
+                    }
+                  },
+                  {
+                    "id": "a7575d06-5bc7-4fad-bacb-2987880664f7",
+                    "name": "dynamic_array",
+                    "type": "ArrayFieldSpec",
+                    "arraySize": {
+                      "type": "DynamicArraySize",
+                      "arraySizeFieldPath": "./size_of_elements"
+                    },
+                    "fieldItem": {
+                      "id": "91e73963-807a-4460-89e9-132052e04704",
+                      "name": "light_bit",
+                      "type": "BitObjectSpec",
+                      "children": [
+                        {
+                          "id": "3f92640d-976c-469b-a4cb-f40004cf9b0a",
+                          "name": "first",
+                          "type": "BitFieldSpec",
+                          "semantics": {
+                            "type": "none"
+                          },
+                          "constraints": [],
+                          "fieldDecoding": {
+                            "type": "NumberFieldDecodingSpec",
+                            "signed": false,
+                            "endianness": "LE",
+                            "numberType": "int"
+                          },
+                          "dataExtraction": {
+                            "type": "DataExtractionSpec",
+                            "endOffset": {
+                              "size": 2,
+                              "type": "FieldSizeOffsetConfig"
+                            },
+                            "startOffset": {
+                              "type": "RelativeToMessageStartOffsetConfig",
+                              "value": 0
+                            }
+                          }
+                        },
+                        {
+                          "id": "f4b45573-5f54-4ba6-9ff6-0d8ca7be3dd0",
+                          "name": "second",
+                          "type": "BitFieldSpec",
+                          "semantics": {
+                            "type": "none"
+                          },
+                          "constraints": [],
+                          "fieldDecoding": {
+                            "type": "NumberFieldDecodingSpec",
+                            "signed": false,
+                            "endianness": "LE",
+                            "numberType": "int"
+                          },
+                          "dataExtraction": {
+                            "type": "DataExtractionSpec",
+                            "endOffset": {
+                              "size": 4,
+                              "type": "FieldSizeOffsetConfig"
+                            },
+                            "startOffset": {
+                              "type": "RelativeToFieldOffsetConfig",
+                              "fieldPath": "./first"
+                            }
+                          }
+                        },
+                        {
+                          "id": "6b90fa0b-e41c-4c1f-ba40-00f13b43e082",
+                          "name": "rest",
+                          "type": "BitFieldSpec",
+                          "semantics": {
+                            "type": "none"
+                          },
+                          "constraints": [],
+                          "fieldDecoding": {
+                            "type": "NumberFieldDecodingSpec",
+                            "signed": false,
+                            "endianness": "LE",
+                            "numberType": "int"
+                          },
+                          "dataExtraction": {
+                            "type": "DataExtractionSpec",
+                            "endOffset": {
+                              "size": 2,
+                              "type": "FieldSizeOffsetConfig"
+                            },
+                            "startOffset": {
+                              "type": "RelativeToFieldOffsetConfig",
+                              "fieldPath": "./second"
+                            }
+                          }
+                        }
+                      ],
+                      "semantics": {
+                        "type": "none"
+                      },
+                      "constraints": [],
+                      "fieldDecoding": {
+                        "type": "NumberFieldDecodingSpec",
+                        "signed": false,
+                        "endianness": "LE",
+                        "numberType": "int"
+                      }
+                    },
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "startOffset": {
+                      "type": "RelativeToFieldOffsetConfig",
+                      "fieldPath": "./size_of_elements"
+                    }
+                  }
+                ]
+              },
+              "startOffset": {
+                "type": "RelativeToFieldOffsetConfig",
+                "fieldPath": "./header"
+              }
+            },
+            "21": {
+              "id": "f5484730-546a-4908-9228-d5868ec99459",
+              "name": "21",
+              "type": "ObjectFieldSpec",
+              "semantics": {
+                "type": "none"
+              },
+              "objectSpec": {
+                "id": "21",
+                "name": "21",
+                "type": "ObjectSpec",
+                "children": [
+                  {
+                    "id": "7d967ddf-fcff-4970-8e04-d707e61cb8eb",
+                    "name": "flight_number",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "25d5a1a0-064f-4644-a424-54f7cbd265da",
+                        "name": "new constraint",
+                        "type": "StringSizeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 7,
+                              "min": 3,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "b237ae61-2492-42d6-9877-d3c81f372f6f",
+                        "abc": [
+                          "lower",
+                          "digits",
+                          "upper"
+                        ],
+                        "name": "new constraint",
+                        "type": "StringCharRulesConstraintSpec",
+                        "charList": [
+                          "#",
+                          "_"
+                        ],
+                        "rulesType": "whiteList"
+                      },
+                      {
+                        "id": "b237ae61-2492-42d6-9877-d3c81f372f6f",
+                        "abc": [],
+                        "name": "new constraint",
+                        "type": "StringCharRulesConstraintSpec",
+                        "charList": [
+                          "#",
+                          "_"
+                        ],
+                        "rulesType": "blackList"
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "StringFieldDecodingSpec",
+                      "charset": "ASCII"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "type": "CharDelimiterOffsetConfig",
+                        "delimiter": "null"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToMessageStartOffsetConfig",
+                        "value": 0
+                      }
+                    }
+                  },
+                  {
+                    "id": "c171d1e8-9fb4-4d7d-9371-3d4f8eb72474",
+                    "name": "aircraft_tail_number",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "7e8f78ea-18cf-4538-a330-2193e8562681",
+                        "name": "new constraint",
+                        "type": "StringSizeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 8,
+                              "min": 2,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "b237ae61-2492-42d6-9877-d3c81f372f6f",
+                        "abc": [
+                          "digits",
+                          "upper",
+                          "lower"
+                        ],
+                        "name": "new constraint",
+                        "type": "StringCharRulesConstraintSpec",
+                        "charList": [
+                          "#",
+                          "_"
+                        ],
+                        "rulesType": "whiteList"
+                      },
+                      {
+                        "id": "b237ae61-2492-42d6-9877-d3c81f372f6f",
+                        "abc": [],
+                        "name": "new constraint",
+                        "type": "StringCharRulesConstraintSpec",
+                        "charList": [
+                          "#",
+                          "@"
+                        ],
+                        "rulesType": "blackList"
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "StringFieldDecodingSpec",
+                      "charset": "ASCII"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "type": "CharDelimiterOffsetConfig",
+                        "delimiter": "null"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToFieldOffsetConfig",
+                        "fieldPath": "./flight_number"
+                      }
+                    }
+                  },
+                  {
+                    "id": "fa0b956d-6e42-48d8-80d4-64acf7b22109",
+                    "name": "IATA_airport_code_of_nearest_airport",
+                    "type": "FieldSpec",
+                    "hexMode": false,
+                    "semantics": {
+                      "type": "none"
+                    },
+                    "constraints": [
+                      {
+                        "id": "fbe2da14-7afa-4d17-9bc4-577ffe2bac68",
+                        "name": "new constraint",
+                        "type": "StringSizeConstraintSpec",
+                        "ranges": [
+                          {
+                            "type": "Between",
+                            "value": {
+                              "max": 4,
+                              "min": 3,
+                              "type": "NumberMinMaxRange"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "id": "b237ae61-2492-42d6-9877-d3c81f372f6f",
+                        "abc": [
+                          "digits",
+                          "upper",
+                          "lower"
+                        ],
+                        "name": "new constraint",
+                        "type": "StringCharRulesConstraintSpec",
+                        "charList": [
+                          "#",
+                          "_"
+                        ],
+                        "rulesType": "whiteList"
+                      },
+                      {
+                        "id": "b237ae61-2492-42d6-9877-d3c81f372f6f",
+                        "abc": [],
+                        "name": "new constraint",
+                        "type": "StringCharRulesConstraintSpec",
+                        "charList": [
+                          "#",
+                          "^"
+                        ],
+                        "rulesType": "blackList"
+                      }
+                    ],
+                    "fieldDecoding": {
+                      "type": "StringFieldDecodingSpec",
+                      "charset": "ASCII"
+                    },
+                    "dataExtraction": {
+                      "type": "DataExtractionSpec",
+                      "endOffset": {
+                        "type": "CharDelimiterOffsetConfig",
+                        "delimiter": "null"
+                      },
+                      "startOffset": {
+                        "type": "RelativeToFieldOffsetConfig",
+                        "fieldPath": "./aircraft_tail_number"
+                      }
+                    }
+                  }
+                ]
+              },
+              "startOffset": {
+                "type": "RelativeToFieldOffsetConfig",
+                "fieldPath": "./header"
+              }
+            }
+          },
+          "pathOfFieldToSwitchOn": "/header/message_type"
+        }
+      ]
+    },
+    "version": "3.0"
+  }
+}
