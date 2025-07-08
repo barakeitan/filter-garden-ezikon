@@ -15,6 +15,33 @@ local JsonFieldExtractor = {}
 -- Internal table for storing parsed JSON information
 local json_icd = {}
 
+--- Parses message enumeration semantics.
+--- @param constraints table A table containing the constraints options. private case messageTypeSemantics
+--- @return table table of enumerated keys.
+--- @raise Raises an error if the semantics table is invalid or missing required fields.
+local function parse_message_enumeration(constraints)
+    if type(constraints) ~= "table" or not constraints.options then
+        utils.json_field_extractor_raise_error("Invalid semantics for message enumeration. Expected table with options.", "parse_message_enumeration")
+    end
+    local keys = {}
+    json_icd.messages = json_icd.messages or {}
+    for _, msg_child in pairs(constraints.options) do
+        if not msg_child.key or not msg_child.label then
+            utils.json_field_extractor_raise_error("Each message option must contain a key and label.", "parse_message_enumeration")
+        end
+        local key = tonumber(msg_child.key)
+        if not key then
+            utils.json_field_extractor_raise_error("Message key must be a valid number.", "parse_message_enumeration")
+        end
+        json_icd.messages[key] = {
+            name = msg_child.label,
+            fields = {}
+        }
+        table.insert(keys, key) -- TODO : consider making an enum section like structs as well
+    end
+    return keys
+end
+
 --- Parses numeric range constraints (e.g., min/max values).
 --- @param constraints table A table containing field constraints.
 --- @return table table with min and max values, or `nil` if not found.
@@ -43,6 +70,8 @@ local function parse_valid_values(constraints)
             end
             return valid_values
            -- return constraint.type ~= "HexNumericRangeConstraintSpec" and { min = range.min, max = range.max } or { min = utils.hex_string_to_integer(range.min), max = utils.hex_string_to_integer(range.max) }
+        elseif constraint.type == "EnumSpec" then
+            return { enum = parse_message_enumeration(constraint) }
         end
     end
     return nil
@@ -97,33 +126,6 @@ local function parse_data_type(field_table)
     end
 
     return data_type
-end
-
---- Parses message enumeration semantics.
---- @param semantics table A table containing the semantics options.
---- @return table table of enumerated keys.
---- @raise Raises an error if the semantics table is invalid or missing required fields.
-local function parse_message_enumeration(semantics)
-    if type(semantics) ~= "table" or not semantics.options then
-        utils.json_field_extractor_raise_error("Invalid semantics for message enumeration. Expected table with options.", "parse_message_enumeration")
-    end
-    local keys = {}
-    json_icd.messages = json_icd.messages or {}
-    for _, msg_child in pairs(semantics.options) do
-        if not msg_child.key or not msg_child.label then
-            utils.json_field_extractor_raise_error("Each message option must contain a key and label.", "parse_message_enumeration")
-        end
-        local key = tonumber(msg_child.key)
-        if not key then
-            utils.json_field_extractor_raise_error("Message key must be a valid number.", "parse_message_enumeration")
-        end
-        json_icd.messages[key] = {
-            name = msg_child.label,
-            fields = {}
-        }
-        table.insert(keys, key)
-    end
-    return keys
 end
 
 --- Extracts the structure definition from the JSON table.
