@@ -103,15 +103,16 @@ local function parse_data_type(field_table)
 
     local decoding = field_table.fieldDecoding
     
-    -- float or double
-    if decoding.numberType and decoding.numberType ~= "int" then
-        return decoding.numberType
-    end
+
     local field_size = parse_field_size(field_table.dataExtraction)
     if not field_size then
         utils.json_field_extractor_raise_error("Field size information is missing or invalid.", "parse_data_type")
     end
 
+    -- float or double is not represented, need to diffrenciate by size
+    if decoding.numberType and decoding.numberType == "decimal" then
+        return field_size == 4 and "float" or "double"
+    end
     local is_signed = decoding.signed
     local base_type = is_signed and "int" or "uint"
 
@@ -167,6 +168,9 @@ local function extract_array_field(field_table)
     return field
 end
 
+local function extract_bitfield_field(field_table)
+
+end
 
 local function extract_string_field(field_table)
     local field = {}
@@ -203,9 +207,18 @@ function extract_json_field(field_table)
     if field_table.type == "ObjectFieldSpec" then
         extract_json_struct(field_table.objectSpec)
         field.data_type = field_table.objectSpec.name .. "_t"
-    -- Check if this is an array
+    -- Check if this is an array of primitives
     elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" or field_table.dataExtraction.endOffset.type == "staticArrayOffsetConfig" then 
         field = utils.mergeTables(field, extract_array_field(field_table))
+
+    -- check if this is an array of structs
+    elseif field_table.type == "ArrayFieldSpec" then
+        field = utils.mergeTables(field, extract_array_field(field_table))
+
+    -- check if this is a bitfield
+    elseif field_table.type == "BitObjectFieldSpec" then
+        field = utils.mergeTables(field, extract_bitfield_field(field_table))
+
     -- Check that the field is a string
     elseif field_table.fieldDecoding.type == "StringFieldDecodingSpec" or field_table.fieldDecoding.type == "HexStringFieldDecodingSpec" then
        field = utils.mergeTables(field, extract_string_field(field_table))
