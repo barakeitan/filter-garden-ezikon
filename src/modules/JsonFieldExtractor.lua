@@ -147,23 +147,34 @@ end
 
 local function extract_array_field(field_table)
     local field = {}
-    local decoding = field_table.fieldDecoding
-    if decoding.numberType and decoding.numberType ~= "int" then
-        return decoding.numberType
-    end
-    local is_signed = decoding.signed
-    local base_type = is_signed and "int" or "uint"
-    local field_size = field_table.dataExtraction.endOffset.itemSize
 
-    if decoding.type == "RawFieldDecodingSpec" or decoding.type == "HexRawFieldDecodingSpec" then
-        base_type = "uint" -- We treat raw fields as unsigned integer, raw field must have size
-    end
-    field.valid_value = parse_valid_values(field_table.constraints)
-    field.data_type = base_type .. (field_size * 8) .. "_t"
-    if field_table.dataExtraction.endOffset.type == "StaticArrayOffsetConfig" then
-        field.static_array_size = field_table.dataExtraction.endOffset.arraySize
-    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" then
-        field.optional = {type= "optional_type.ARRAY", depend=field_table.dataExtraction.endOffset.arraySizeFieldPath}
+    -- This means that it is an array of struct, hence the treatment should be different
+    if field_table.type == "ArrayFieldSpec" then
+        field.data_type = extract_json_struct(field_table.fieldItem)
+        if field_table.arraySize.type == "StaticArraySize" then
+            field.static_array_size = field_table.arraySize.arraySize
+        elseif field_table.arraySize.type == "DynamicArraySize" then 
+            field.optional = {type= "optional_type.ARRAY", depend=field_table.arraySize.arraySizeFieldPath}
+        end
+    else
+        local decoding = field_table.fieldDecoding
+        if decoding.numberType and decoding.numberType ~= "int" then
+            return decoding.numberType
+        end
+        local is_signed = decoding.signed
+        local base_type = is_signed and "int" or "uint"
+        local field_size = field_table.dataExtraction.endOffset.itemSize
+
+        if decoding.type == "RawFieldDecodingSpec" then
+            base_type = "uint" -- We treat raw fields as unsigned integer, raw field must have size
+        end
+        field.valid_value = parse_valid_values(field_table.constraints)
+        field.data_type = base_type .. (field_size * 8) .. "_t"
+        if field_table.dataExtraction.endOffset.type == "StaticArrayOffsetConfig" then
+            field.static_array_size = field_table.dataExtraction.endOffset.arraySize
+        elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" then
+            field.optional = {type= "optional_type.ARRAY", depend=field_table.dataExtraction.endOffset.arraySizeFieldPath}
+        end
     end
     return field
 end
