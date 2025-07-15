@@ -154,7 +154,7 @@ local function extract_array_field(field_table)
         if field_table.arraySize.type == "StaticArraySize" then
             field.static_array_size = field_table.arraySize.arraySize
         elseif field_table.arraySize.type == "DynamicArraySize" then 
-            field.optional = {type= "optional_type.ARRAY", depend=field_table.arraySize.arraySizeFieldPath}
+            field.optional = {type= "optional_type.ARRAY", depend=string.sub(field_table.arraySize.arraySizeFieldPath, 3)} -- remove the ./
         end
     else
         local decoding = field_table.fieldDecoding
@@ -173,7 +173,7 @@ local function extract_array_field(field_table)
         if field_table.dataExtraction.endOffset.type == "StaticArrayOffsetConfig" then
             field.static_array_size = field_table.dataExtraction.endOffset.arraySize
         elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" then
-            field.optional = {type= "optional_type.ARRAY", depend=field_table.dataExtraction.endOffset.arraySizeFieldPath}
+            field.optional = {type= "optional_type.ARRAY", depend=string.sub(field_table.dataExtraction.endOffset.arraySizeFieldPath, 3)}
         end
     end
     return field
