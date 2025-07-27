@@ -11,8 +11,14 @@ Constants.MESSAGES_SECTION_END = "\n--------------------------------------------
 Constants.STRUCTS_SECTION_START = "\n--------------- STRUCTS SECTION --------------\n\n"
 Constants.STRUCTS_SECTION_END = "\n-----------------------------------------------\n"
 
+Constants.BITFIELDS_SECTION_START = "\n--------------- BITFIELDS SECTION --------------\n\n"
+Constants.BITFIELDS_SECTION_END = "\n-----------------------------------------------\n"
+
 Constants.STRUCT_TABLE_SECTION_START = "\n--------------- Struct Table Definition ---------------\n\n"
 Constants.STRUCT_TABLE_SECTION_END = "\n-------------------------------------------------------\n"
+
+Constants.BITFIELD_TABLE_SECTION_START = "\n--------------- Bit Field Table Definition ---------------\n\n"
+Constants.BITFIELD_TABLE_SECTION_END = "\n-------------------------------------------------------\n"
 
 Constants.MESSAGE_TABLE_SECTION_START = "\n-------------- Message Table Definition ---------------\n\n"
 Constants.MESSAGE_TABLE_SECTION_END = "\n-------------------------------------------------------\n"

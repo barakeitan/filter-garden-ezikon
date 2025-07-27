@@ -37,14 +37,14 @@ end
 
 --- @brief Checks if a specified structure name exists within a structure definition table.
 ---
---- @param struct_def table A table containing the structure names.
---- @param struct_name string The name of the structure to check for.
+--- @param type_def table A table containing the structure names.
+--- @param type_name string The name of the structure to check for.
 ---
 --- @return boolean Returns `true` if the structure name exists in the definition, otherwise `false`.
-function Utils.struct_exists(struct_def, struct_name)
-    if type(struct_def) ~= "table" or not struct_def then return false end
-    for _, v in ipairs(struct_def) do
-        if v == struct_name then
+function Utils.type_exist_in_table(type_def, type_name)
+    if type(type_def) ~= "table" or not type_def then return false end
+    for _, v in ipairs(type_def) do
+        if v == type_name then
             return true
         end
     end

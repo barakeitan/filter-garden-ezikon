@@ -46,6 +46,19 @@ local function generate_structs(json_icd)
     return output .. Constants.STRUCTS_SECTION_END
 end
 
+--- Generates the Lua code for structure definitions based on the provided JSON ICD.
+--- @param json_icd table The JSON structure containing the structure definitions.
+--- @return string The Lua code string for the structure definitions.
+local function generate_bit_arrays(json_icd)
+    local output = Constants.BITFIELDS_SECTION_START
+    for bit_field_name, fields in pairs(json_icd.bit_fields) do
+        output = output .. "-- " .. string.upper(bit_field_name) .. "\nlocal " .. bit_field_name .. " = {\n" ..
+            field_table_to_string(fields, 1) ..
+            "\n}\n"
+    end
+    return output .. Constants.BITFIELDS_SECTION_END
+end
+
 --- Generates the Lua code for the structure table mapping in the ICD.
 --- @param json_icd table The JSON structure containing structure type definitions.
 --- @return string The Lua code string for the structure table mapping.
@@ -55,6 +68,17 @@ local function generate_structs_table_code(json_icd)
         output = output .. "  [\"" .. struct_name .. "_t\"] = " .. struct_name .. ",\n"
     end
     return output:sub(1, -3) .. "\n}\n" .. Constants.STRUCT_TABLE_SECTION_END
+end
+
+--- Generates the Lua code for the structure table mapping in the ICD.
+--- @param json_icd table The JSON structure containing structure type definitions.
+--- @return string The Lua code string for the structure table mapping.
+local function generate_bitfields_table_code(json_icd)
+    local output = Constants.BITFIELD_TABLE_SECTION_START .. "local bit_fields = {\n"
+    for _, bitfield_name in ipairs(json_icd.bit_fields_def) do
+        output = output .. "  [\"" .. bitfield_name .. "_bit_array\"] = " .. bitfield_name .. ",\n"
+    end
+    return output:sub(1, -3) .. "\n}\n" .. Constants.BITFIELD_TABLE_SECTION_END
 end
 
 --- Generates the Lua code for the messages table mapping in the ICD.
@@ -76,9 +100,11 @@ function Formatter.generate_lua_output(json_icd)
         "-- ======" .. json_icd.protocol_name .. " Filter" .. "====== --" .. "\n\n" ..
         generate_header_code(json_icd) ..
         generate_messages_code(json_icd) ..
+        generate_bit_arrays(json_icd) .. 
         generate_structs(json_icd) ..
         generate_structs_table_code(json_icd) ..
         generate_messages_table_code(json_icd) ..
+        generate_bitfields_table_code(json_icd) ..
         "\ngenerate_filter_code(header_record, messages)"
     return output
 end
@@ -138,7 +164,7 @@ function field_table_to_string(tbl, indent)
             entry = entry .. ", optional = { type = " .. field.optional.type .. ', depend = "' .. tostring(field.optional.depend) .. '" }'
         end
         if field.static_array_size then
-            entry = entry .. "static_array_size = " .. tostring(field.static_array_size)
+            entry = entry .. ", static_array_size = " .. tostring(field.static_array_size)
         end
         -- Check for gap properties and format accordingly
     

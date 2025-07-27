@@ -59,10 +59,10 @@ local function parse_valid_values(constraints)
             local range = constraint.ranges[1]
             local min, max, valid_values
             if range.type == "Between" then
-                if range.min == nil or range.max == nil then
+                if range.value.min == nil or range.value.max == nil then
                     utils.json_field_extractor_raise_error("Range must contain both min and max values.", "parse_min_max")
                 end
-                valid_values = { min = range.min, max = range.max }
+                valid_values = { min = range.value.min, max = range.value.max }
             elseif range.type == "LowerThan" or range.type == "GreaterThan" then
                 valid_values = range.type == "LowerThan" and {min = range.value} or {max = range.value}
             elseif range.type == "EqualTo" then
@@ -135,7 +135,7 @@ end
 --- @raise Raises an error if the structure definition is invalid or incomplete.
 function extract_json_struct(object_table)
     local struct_name = utils.valid_message_name(object_table.name)
-    if not utils.struct_exists(json_icd.structs_def, struct_name) then
+    if not utils.type_exist_in_table(json_icd.structs_def, struct_name) then
         table.insert(json_icd.structs_def, struct_name)
         json_icd.structs[struct_name] = {}
         for _, child_field in ipairs(object_table.children) do
@@ -145,12 +145,48 @@ function extract_json_struct(object_table)
     return struct_name
 end
 
+--- extracts bitfield fields
+---@param bitfield_object table Must be a bitObjectSpec and not BitObjectFieldSpec
+---@return string Name of the extracted bitfield
+local function extract_json_bitfield(bitfield_object)
+    local bit_field_name = utils.valid_message_name(bitfield_object.name)
+    if not utils.type_exist_in_table(json_icd.bit_fields_def, bit_field_name) then
+        table.insert(json_icd.bit_fields_def, bit_field_name)
+        json_icd.bit_fields[bit_field_name] = {}
+        local bitfield_size = 0
+        for _, child_field in ipairs(bitfield_object.children) do
+            local child = extract_json_field(child_field)
+            table.insert(json_icd.bit_fields[bit_field_name], child)
+            bitfield_size = bitfield_size + tonumber(child.bit_count)
+        end
+        json_icd.bit_fields_data_type[bit_field_name] = "uint"..bitfield_size.."_t"
+    end
+    return bit_field_name
+end
+
+--- extracts an object based on his object type (any derivative of ObjectSpec)
+--- currently here for extensions of object types
+---@param object_table table the table representing the object
+---@return string the name of the extracted object
+local function extract_json_object(object_table)
+    local name = ""
+    if object_table.type == "objectSpec" then
+        name = extract_json_struct(object_table)
+    elseif object_table.type == "BitObjectSpec" then
+        name = extract_json_bitfield(object_table)
+    end
+    return name
+end
+
 local function extract_array_field(field_table)
     local field = {}
 
     -- This means that it is an array of struct, hence the treatment should be different
     if field_table.type == "ArrayFieldSpec" then
         field.data_type = extract_json_struct(field_table.fieldItem)
+        if field_table.fieldItem.type == "BitObjectSpec" then
+            field.bit_field = extract_json_bitfield(field_table.fieldItem)
+        end
         if field_table.arraySize.type == "StaticArraySize" then
             field.static_array_size = field_table.arraySize.arraySize
         elseif field_table.arraySize.type == "DynamicArraySize" then 
@@ -177,10 +213,6 @@ local function extract_array_field(field_table)
         end
     end
     return field
-end
-
-local function extract_bitfield_field(field_table)
-
 end
 
 local function extract_string_field(field_table)
@@ -218,21 +250,30 @@ function extract_json_field(field_table)
     if field_table.type == "ObjectFieldSpec" then
         extract_json_struct(field_table.objectSpec)
         field.data_type = field_table.objectSpec.name .. "_t"
-    -- Check if this is an array of primitives
-    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" or field_table.dataExtraction.endOffset.type == "staticArrayOffsetConfig" then 
-        field = utils.mergeTables(field, extract_array_field(field_table))
 
     -- check if this is an array of structs
     elseif field_table.type == "ArrayFieldSpec" then
         field = utils.mergeTables(field, extract_array_field(field_table))
 
-    -- check if this is a bitfield
+    -- check if this is a bitfield container
     elseif field_table.type == "BitObjectFieldSpec" then
-        field = utils.mergeTables(field, extract_bitfield_field(field_table))
+        extract_json_bitfield(field_table.objectSpec)
+        local field_name = field_table.objectSpec.name .. "_bit_array"
+        field.data_type = json_icd.bit_fields_data_type[field_name]
+        field.bit_field = field_name
+
+    -- check if this is an individual bit in a bit array
+    elseif field_table.type == "BitFieldSpec" then
+        field.bit_count = parse_field_size(field_table.dataExtraction)
+        field.valid_value = parse_valid_values(field_table.constraints)
 
     -- Check that the field is a string
     elseif field_table.fieldDecoding.type == "StringFieldDecodingSpec" or field_table.fieldDecoding.type == "HexStringFieldDecodingSpec" then
        field = utils.mergeTables(field, extract_string_field(field_table))
+    
+       -- Check if this is an array of primitives
+    elseif field_table.dataExtraction.endOffset.type == "DynamicArrayOffsetConfig" or field_table.dataExtraction.endOffset.type == "staticArrayOffsetConfig" then 
+    field = utils.mergeTables(field, extract_array_field(field_table))
     else
         if field_table.semantics then
             if field_table.semantics.type == "MessageTypeSemanticsSpec" then
@@ -331,6 +372,9 @@ local function load_json_icd(json_table)
     json_icd.protocol_name = json_table.name
     json_icd.structs_def = {}
     json_icd.structs = {}
+    json_icd.bit_fields = {}
+    json_icd.bit_fields_def = {}
+    json_icd.bit_fields_data_type = {} -- This is a serious hack because the json doesn't contain the size of the bitfield
     json_icd.header_record = extract_json_header(json_table)
     json_icd.messages = extract_json_body(json_table)
 end

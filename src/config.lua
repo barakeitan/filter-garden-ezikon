@@ -7,8 +7,8 @@
 ]]
 
 local config = {
-    inputPath = "./data/partial_dis_for_iaf.json",
-    outputPath = "./output/partial_dis_for_iaf.lua"
+    inputPath = "./data/moshe_bitfield.json",
+    outputPath = "./output/moshe_bitfield.lua"
 }
 
 return config
